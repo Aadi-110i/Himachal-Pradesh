@@ -1,0 +1,124 @@
+import React, { useState } from 'react';
+import MainLayout from '../components/layout/MainLayout';
+import PanoramaViewer from '../components/3d/PanoramaViewer';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Info, Maximize2, Move, Compass, Sparkles, HelpCircle, Trophy, Box } from 'lucide-react';
+import QuizModal from '../components/ui/QuizModal';
+
+const ARViewer = () => {
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [hasFoundTreasure, setHasFoundFoundTreasure] = useState(false);
+
+  const monastery360 = "/assets/1.jpeg";
+
+  const rumtekQuiz = {
+    question: "What is the primary lineage associated with the Rumtek Monastery?",
+    options: ["Nyingma", "Kagyu", "Gelug", "Sakya"],
+    correct: 1,
+    badge: { id: 'kagyu_scholar', name: 'Kagyu Scholar', icon: Trophy }
+  };
+
+  return (
+    <MainLayout>
+      <div className="h-[calc(100vh-64px-56px)] w-full flex flex-col md:flex-row bg-cream overflow-hidden">
+        {/* Viewer Section */}
+        <div className="flex-grow h-full relative group cursor-crosshair bg-gray-200">
+          <PanoramaViewer imageUrl={monastery360} />
+          
+          {/* AR Treasure Hunt Hotspot */}
+          {!hasFoundTreasure && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              onClick={() => { setIsQuizOpen(true); setHasFoundFoundTreasure(true); }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-maroon/20 border-2 border-maroon rounded-full flex items-center justify-center hover:bg-maroon hover:scale-125 transition-all shadow-2xl"
+            >
+              <Sparkles className="text-white w-6 h-6 animate-pulse" />
+            </motion.button>
+          )}
+
+          {/* Overlay UI */}
+          <div className="absolute top-6 left-6 z-10">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white/80 backdrop-blur-md border border-maroon/10 p-5 rounded-4xl shadow-xl"
+            >
+              <div className="flex items-center gap-3 mb-1">
+                 <h2 className="text-2xl font-serif text-maroon">Rumtek Interior</h2>
+                 <div className="bg-maroon/10 px-2 py-0.5 rounded-lg border border-maroon/20 text-[8px] font-bold text-maroon uppercase tracking-widest">Discovery Active</div>
+              </div>
+              <p className="text-maroon/40 text-[10px] font-bold tracking-widest uppercase">360° Virtual Sanctuary</p>
+            </motion.div>
+          </div>
+
+          {/* Interaction Hints */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col md:flex-row gap-4 items-center w-full px-6 md:w-auto">
+            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full border border-maroon/5 flex items-center gap-3 text-xs font-medium text-maroon/70 shadow-xl">
+              <Move className="w-4 h-4 text-maroon" /> Drag to explore space
+            </div>
+            <div className="bg-maroon px-6 py-3 rounded-full flex items-center gap-3 text-xs font-bold text-white shadow-xl animate-bounce">
+              <HelpCircle className="w-4 h-4" /> Find the sacred relic
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Info */}
+        <div className="w-full md:w-96 h-full border-l border-maroon/5 bg-white p-8 overflow-y-auto custom-scrollbar">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 bg-maroon/5 rounded-xl flex items-center justify-center">
+              <Box className="text-maroon w-5 h-5" />
+            </div>
+            <h3 className="text-xl font-serif text-maroon">Sanctuary Details</h3>
+          </div>
+
+          <div className="space-y-8">
+            <section>
+              <h4 className="text-[10px] font-bold text-maroon/30 uppercase tracking-widest mb-4">Space Context</h4>
+              <p className="text-maroon/70 leading-relaxed text-sm">
+                This assembly hall is the heart of the Dharma Chakra Centre. The murals represent the transmission of the Kagyu lineage from India to Tibet, meticulously restored using traditional mineral pigments.
+              </p>
+            </section>
+
+            <section className="bg-maroon/5 border border-maroon/5 p-6 rounded-4xl">
+              <div className="flex items-center gap-3 mb-3">
+                 <Sparkles className="w-4 h-4 text-maroon" />
+                 <h4 className="text-[10px] font-bold text-maroon uppercase tracking-widest">Heritage Quest</h4>
+              </div>
+              <p className="text-xs text-maroon/60 leading-relaxed font-medium">
+                Locate hidden spiritual artifacts within this sanctuary to unlock exclusive digital archives and earn heritage badges.
+              </p>
+            </section>
+
+            <button className="w-full bg-cream text-maroon py-4 rounded-3xl font-bold text-xs uppercase tracking-widest hover:bg-maroon hover:text-white transition-all shadow-sm">
+              Switch to Courtyard
+            </button>
+            
+            <div className="pt-8 border-t border-maroon/5">
+               <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-[10px] font-bold text-maroon/30 uppercase tracking-widest">Nearby Sites</h4>
+                  <button className="text-[10px] font-bold text-maroon uppercase">View All</button>
+               </div>
+               <div className="flex gap-4">
+                  <img src="https://images.unsplash.com/photo-1623492701902-47dc207df5dc?auto=format&fit=crop&q=80&w=100" className="w-16 h-16 rounded-2xl object-cover shadow-sm" alt="" />
+                  <div className="flex flex-col justify-center">
+                     <p className="font-serif text-maroon text-sm">Enchey Sector</p>
+                     <p className="text-[10px] text-maroon/40 uppercase font-bold">5.2 km away</p>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <QuizModal 
+        isOpen={isQuizOpen} 
+        onClose={() => setIsQuizOpen(false)} 
+        quiz={rumtekQuiz} 
+      />
+    </MainLayout>
+  );
+};
+
+export default ARViewer;
