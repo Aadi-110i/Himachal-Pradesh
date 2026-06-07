@@ -49,7 +49,7 @@ const Dashboard = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate('/archives');
+      navigate('/archives', { state: { query: searchQuery } });
     }
   };
 

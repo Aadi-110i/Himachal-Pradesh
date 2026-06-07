@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Download, ExternalLink, Info, Filter, Archive, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Assets
 import buddhistTextsImg from '../assets/buddhist_texts.png';
@@ -13,9 +13,10 @@ import monasteryExteriorImg from '../assets/monastery_exterior.png';
 
 const DigitalArchives = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedItem, setSelectedItem] = useState(null);
   const [activeFilter, setActiveFilter] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(location.state?.query || '');
 
   const archiveItems = [
     { id: 'ancient-buddhist-texts', title: "Ancient Buddhist Texts (Kanjur)", type: "Manuscript", date: "14th Century", img: buddhistTextsImg, desc: "A rare collection of Tibetan Buddhist scriptures detailing the lineage of the Karmapas." },
@@ -174,7 +175,15 @@ const DigitalArchives = () => {
                   </div>
 
                   <div className="mt-auto flex flex-wrap gap-4">
-                    <button className="bg-maroon text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-maroon-dark transition-all shadow-lg shadow-maroon/20">
+                    <button 
+                      onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = selectedItem.img;
+                        link.download = `archive-${selectedItem.id}-scan.png`;
+                        link.click();
+                      }}
+                      className="bg-maroon text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-maroon-dark transition-all shadow-lg shadow-maroon/20"
+                    >
                       <Download className="w-5 h-5" /> Download HD Scan
                     </button>
                     <button className="bg-cream-dark border border-maroon/5 text-maroon px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-maroon/5 transition-all">

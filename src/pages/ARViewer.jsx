@@ -3,11 +3,17 @@ import MainLayout from '../components/layout/MainLayout';
 import PanoramaViewer from '../components/3d/PanoramaViewer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Info, Maximize2, Move, Compass, Sparkles, HelpCircle, Trophy, Box } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import QuizModal from '../components/ui/QuizModal';
 
+// Assets
+import monasteryExteriorImg from '../assets/monastery_exterior.png';
+
 const ARViewer = () => {
+  const navigate = useNavigate();
   const [isQuizOpen, setIsQuizOpen] = useState(false);
-  const [hasFoundTreasure, setHasFoundFoundTreasure] = useState(false);
+  const [hasFoundTreasure, setHasFoundTreasure] = useState(false);
+  const [activeView, setActiveView] = useState('interior'); // 'interior' | 'courtyard'
 
   const monastery360 = "/assets/moqshss4.png";
 
@@ -31,7 +37,7 @@ const ARViewer = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ repeat: Infinity, duration: 2 }}
-              onClick={() => { setIsQuizOpen(true); setHasFoundFoundTreasure(true); }}
+              onClick={() => { setIsQuizOpen(true); setHasFoundTreasure(true); }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-maroon/20 border-2 border-maroon rounded-full flex items-center justify-center hover:bg-maroon hover:scale-125 transition-all shadow-2xl"
             >
               <Sparkles className="text-white w-6 h-6 animate-pulse" />
@@ -46,11 +52,35 @@ const ARViewer = () => {
               className="bg-white/80 backdrop-blur-md border border-maroon/10 p-5 rounded-4xl shadow-xl"
             >
               <div className="flex items-center gap-3 mb-1">
-                 <h2 className="text-2xl font-serif text-maroon">Rumtek Interior</h2>
-                 <div className="bg-maroon/10 px-2 py-0.5 rounded-lg border border-maroon/20 text-[8px] font-bold text-maroon uppercase tracking-widest">Discovery Active</div>
+                 <h2 className="text-2xl font-serif text-maroon">
+                   {activeView === 'interior' ? 'Rumtek Interior' : 'Monastery Courtyard'}
+                 </h2>
+                 <div className="bg-maroon/10 px-2 py-0.5 rounded-lg border border-maroon/20 text-[8px] font-bold text-maroon uppercase tracking-widest">
+                   {hasFoundTreasure ? 'Relic Found!' : 'Discovery Active'}
+                 </div>
               </div>
               <p className="text-maroon/40 text-[10px] font-bold tracking-widest uppercase">360° Virtual Sanctuary</p>
             </motion.div>
+          </div>
+
+          {/* View toggle pills */}
+          <div className="absolute top-6 right-6 z-10 flex gap-2">
+            <button 
+              onClick={() => setActiveView('interior')}
+              className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md border transition-all ${
+                activeView === 'interior' ? 'bg-maroon text-white border-maroon' : 'bg-white/80 text-maroon/60 border-maroon/10 hover:bg-white'
+              }`}
+            >
+              Interior
+            </button>
+            <button 
+              onClick={() => setActiveView('courtyard')}
+              className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md border transition-all ${
+                activeView === 'courtyard' ? 'bg-maroon text-white border-maroon' : 'bg-white/80 text-maroon/60 border-maroon/10 hover:bg-white'
+              }`}
+            >
+              Courtyard
+            </button>
           </div>
 
           {/* Interaction Hints */}
@@ -58,9 +88,16 @@ const ARViewer = () => {
             <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full border border-maroon/5 flex items-center gap-3 text-xs font-medium text-maroon/70 shadow-xl">
               <Move className="w-4 h-4 text-maroon" /> Drag to explore space
             </div>
-            <div className="bg-maroon px-6 py-3 rounded-full flex items-center gap-3 text-xs font-bold text-white shadow-xl animate-bounce">
-              <HelpCircle className="w-4 h-4" /> Find the sacred relic
-            </div>
+            {!hasFoundTreasure && (
+              <div className="bg-maroon px-6 py-3 rounded-full flex items-center gap-3 text-xs font-bold text-white shadow-xl animate-bounce">
+                <HelpCircle className="w-4 h-4" /> Find the sacred relic
+              </div>
+            )}
+            {hasFoundTreasure && (
+              <div className="bg-emerald-600 px-6 py-3 rounded-full flex items-center gap-3 text-xs font-bold text-white shadow-xl">
+                <Trophy className="w-4 h-4" /> Relic discovered! +100 XP
+              </div>
+            )}
           </div>
         </div>
 
@@ -87,23 +124,42 @@ const ARViewer = () => {
                  <h4 className="text-[10px] font-bold text-maroon uppercase tracking-widest">Heritage Quest</h4>
               </div>
               <p className="text-xs text-maroon/60 leading-relaxed font-medium">
-                Locate hidden spiritual artifacts within this sanctuary to unlock exclusive digital archives and earn heritage badges.
+                {hasFoundTreasure 
+                  ? 'Congratulations! You found the sacred relic and earned the Kagyu Scholar badge. Continue exploring to discover more hidden artifacts.'
+                  : 'Locate hidden spiritual artifacts within this sanctuary to unlock exclusive digital archives and earn heritage badges.'
+                }
               </p>
+              {hasFoundTreasure && (
+                <div className="mt-3 flex items-center gap-2 text-xs font-bold text-emerald-600">
+                  <Trophy className="w-4 h-4" /> Kagyu Scholar Badge Earned
+                </div>
+              )}
             </section>
 
-            <button className="w-full bg-cream text-maroon py-4 rounded-3xl font-bold text-xs uppercase tracking-widest hover:bg-maroon hover:text-white transition-all shadow-sm">
-              Switch to Courtyard
+            <button 
+              onClick={() => setActiveView(activeView === 'interior' ? 'courtyard' : 'interior')}
+              className="w-full bg-cream text-maroon py-4 rounded-3xl font-bold text-xs uppercase tracking-widest hover:bg-maroon hover:text-white transition-all shadow-sm"
+            >
+              Switch to {activeView === 'interior' ? 'Courtyard' : 'Interior'}
             </button>
             
             <div className="pt-8 border-t border-maroon/5">
                <div className="flex items-center justify-between mb-4">
                   <h4 className="text-[10px] font-bold text-maroon/30 uppercase tracking-widest">Nearby Sites</h4>
-                  <button className="text-[10px] font-bold text-maroon uppercase">View All</button>
+                  <button 
+                    onClick={() => navigate('/map')}
+                    className="text-[10px] font-bold text-maroon uppercase hover:text-maroon-dark transition-colors"
+                  >
+                    View All
+                  </button>
                </div>
-               <div className="flex gap-4">
-                  <img src="https://images.unsplash.com/photo-1623492701902-47dc207df5dc?auto=format&fit=crop&q=80&w=100" className="w-16 h-16 rounded-2xl object-cover shadow-sm" alt="" />
+               <div 
+                 className="flex gap-4 cursor-pointer group"
+                 onClick={() => navigate('/panorama/key')}
+               >
+                  <img src={monasteryExteriorImg} className="w-16 h-16 rounded-2xl object-cover shadow-sm group-hover:shadow-md transition-shadow" alt="Nearby monastery" />
                   <div className="flex flex-col justify-center">
-                     <p className="font-serif text-maroon text-sm">Enchey Sector</p>
+                     <p className="font-serif text-maroon text-sm group-hover:text-maroon-dark transition-colors">Enchey Monastery</p>
                      <p className="text-[10px] text-maroon/40 uppercase font-bold">5.2 km away</p>
                   </div>
                </div>

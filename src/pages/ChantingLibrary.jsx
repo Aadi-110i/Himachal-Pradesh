@@ -1,91 +1,165 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Clock, Music, Heart, Shuffle, Repeat, ChevronRight } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Clock, Music, Heart, Shuffle, Repeat } from 'lucide-react';
 
 // Assets
 import templeInteriorImg from '../assets/temple_interior.png';
 import monasteryExteriorImg from '../assets/monastery_exterior.png';
 
+// ─── Web Audio Synthesizer ──────────────────────────────────────────────────
+// Each track gets a unique tone profile using the Web Audio API.
+// This creates gentle, meditative ambient sounds — singing bowls, drones, harmonics.
+const TONE_PROFILES = {
+  1: { base: 136.1, harmonics: [1, 2, 3, 5], type: 'sine', name: 'Om' },        // Om frequency
+  2: { base: 256, harmonics: [1, 1.5, 2, 3], type: 'sine', name: 'Heart' },      // C4
+  3: { base: 172, harmonics: [1, 2, 4, 5], type: 'sine', name: 'Vajra' },        // F3
+  4: { base: 528, harmonics: [1, 1.25, 1.5, 2], type: 'sine', name: 'Tara' },    // Love frequency
+  5: { base: 110, harmonics: [1, 2, 3, 4, 6], type: 'sawtooth', name: 'Mahakala' }, // Deep A2
+  6: { base: 396, harmonics: [1, 1.5, 2], type: 'sine', name: 'Morning' },       // G4
+  7: { base: 174, harmonics: [1, 2, 3, 5], type: 'triangle', name: 'Tsok' },     // Foundation
+  8: { base: 216, harmonics: [1, 1.5, 2, 2.5, 3], type: 'sine', name: 'Dharma' }, // Lecture tone
+};
+
+class MeditationSynth {
+  constructor() {
+    this.ctx = null;
+    this.nodes = [];
+    this.masterGain = null;
+    this.lfo = null;
+    this.isActive = false;
+  }
+
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  play(trackId, volume = 0.7) {
+    this.stop();
+    this.init();
+    
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+
+    const profile = TONE_PROFILES[trackId] || TONE_PROFILES[1];
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+    this.masterGain.gain.linearRampToValueAtTime(volume * 0.15, this.ctx.currentTime + 2); // Fade in
+
+    // Reverb-like effect using delay
+    const delay = this.ctx.createDelay();
+    delay.delayTime.value = 0.3;
+    const feedback = this.ctx.createGain();
+    feedback.gain.value = 0.3;
+    delay.connect(feedback);
+    feedback.connect(delay);
+
+    const delayGain = this.ctx.createGain();
+    delayGain.gain.value = 0.4;
+    delay.connect(delayGain);
+    delayGain.connect(this.masterGain);
+
+    // LFO for gentle wavering
+    this.lfo = this.ctx.createOscillator();
+    this.lfo.frequency.value = 0.15 + Math.random() * 0.1; // Very slow
+    const lfoGain = this.ctx.createGain();
+    lfoGain.gain.value = 3; // Subtle pitch variation
+    this.lfo.connect(lfoGain);
+    this.lfo.start();
+
+    // Create harmonics
+    profile.harmonics.forEach((mult, i) => {
+      const osc = this.ctx.createOscillator();
+      osc.type = profile.type;
+      osc.frequency.value = profile.base * mult;
+      
+      // Connect LFO to pitch
+      lfoGain.connect(osc.frequency);
+
+      const oscGain = this.ctx.createGain();
+      // Lower harmonics are louder
+      oscGain.gain.value = 1 / (i + 1) * 0.6;
+
+      osc.connect(oscGain);
+      oscGain.connect(this.masterGain);
+      oscGain.connect(delay); // Feed into delay for reverb
+
+      osc.start();
+      this.nodes.push(osc, oscGain);
+    });
+
+    // Add a gentle "singing bowl" ping every few seconds
+    this.bowlInterval = setInterval(() => {
+      if (!this.ctx || this.ctx.state === 'closed') {
+        clearInterval(this.bowlInterval);
+        return;
+      }
+      const ping = this.ctx.createOscillator();
+      ping.type = 'sine';
+      ping.frequency.value = profile.base * (2 + Math.random());
+      const pingGain = this.ctx.createGain();
+      const now = this.ctx.currentTime;
+      pingGain.gain.setValueAtTime(0, now);
+      pingGain.gain.linearRampToValueAtTime(volume * 0.08, now + 0.05);
+      pingGain.gain.exponentialRampToValueAtTime(0.001, now + 3);
+      ping.connect(pingGain);
+      pingGain.connect(this.masterGain);
+      ping.start(now);
+      ping.stop(now + 3);
+    }, 4000 + Math.random() * 3000);
+
+    this.masterGain.connect(this.ctx.destination);
+    this.nodes.push(delay, feedback, delayGain, this.lfo, lfoGain);
+    this.isActive = true;
+  }
+
+  setVolume(vol) {
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.linearRampToValueAtTime(vol * 0.15, this.ctx.currentTime + 0.1);
+    }
+  }
+
+  stop() {
+    if (this.bowlInterval) clearInterval(this.bowlInterval);
+    this.nodes.forEach(n => {
+      try { n.disconnect(); } catch(e) {}
+      try { if (n.stop) n.stop(); } catch(e) {}
+    });
+    this.nodes = [];
+    if (this.masterGain) {
+      try { this.masterGain.disconnect(); } catch(e) {}
+    }
+    this.masterGain = null;
+    this.lfo = null;
+    this.isActive = false;
+  }
+
+  destroy() {
+    this.stop();
+    if (this.ctx && this.ctx.state !== 'closed') {
+      this.ctx.close();
+    }
+    this.ctx = null;
+  }
+}
+
+// ─── Track Data ─────────────────────────────────────────────────────────────
 const chants = [
-  {
-    id: 1,
-    title: 'Om Mani Padme Hum',
-    artist: 'Rumtek Monastery Monks',
-    category: 'Morning Prayers',
-    duration: '12:34',
-    durationSec: 754,
-    description: 'The most widely used mantra in Tibetan Buddhism, invoking the blessings of Chenrezig, the embodiment of compassion.',
-    img: templeInteriorImg,
-  },
-  {
-    id: 2,
-    title: 'Heart Sutra Chanting',
-    artist: 'Senior Lama Dorje',
-    category: 'Morning Prayers',
-    duration: '8:21',
-    durationSec: 501,
-    description: 'A concise recitation of the Prajnaparamita Heart Sutra, capturing the essence of Buddhist wisdom on emptiness.',
-  },
-  {
-    id: 3,
-    title: 'Vajra Guru Mantra',
-    artist: 'Kagyu Assembly',
-    category: 'Festival Hymns',
-    duration: '15:47',
-    durationSec: 947,
-    description: 'The mantra of Guru Padmasambhava, chanted during Losar and other major festival celebrations.',
-  },
-  {
-    id: 4,
-    title: 'Green Tara Prayer',
-    artist: 'Monastery Choir',
-    category: 'Festival Hymns',
-    duration: '6:55',
-    durationSec: 415,
-    description: 'A devotional prayer to Green Tara, the female Buddha of compassionate activity and protection.',
-  },
-  {
-    id: 5,
-    title: 'Mahakala Puja',
-    artist: 'Ritual Masters',
-    category: 'Monastic Rites',
-    duration: '22:10',
-    durationSec: 1330,
-    description: 'The fierce protector deity invocation performed at dusk, accompanied by drums and long horns.',
-  },
-  {
-    id: 6,
-    title: 'Morning Dedication Prayer',
-    artist: 'Abbot Rinpoche',
-    category: 'Morning Prayers',
-    duration: '4:30',
-    durationSec: 270,
-    description: 'The opening prayer of each day, dedicating all activities to the benefit of all sentient beings.',
-  },
-  {
-    id: 7,
-    title: 'Tsok Offering Chant',
-    artist: 'Rumtek Sangha',
-    category: 'Monastic Rites',
-    duration: '18:05',
-    durationSec: 1085,
-    description: 'The communal feast offering ritual, performed on auspicious days of the lunar calendar.',
-  },
-  {
-    id: 8,
-    title: 'Live Dharma Teaching',
-    artist: 'H.H. Karmapa',
-    category: 'Live Events',
-    duration: '45:00',
-    durationSec: 2700,
-    description: 'A live recorded teaching session on the nature of mind and meditation practice.',
-    img: monasteryExteriorImg,
-  },
+  { id: 1, title: 'Om Mani Padme Hum', artist: 'Rumtek Monastery Monks', category: 'Morning Prayers', duration: '12:34', durationSec: 754, description: 'The most widely used mantra in Tibetan Buddhism, invoking the blessings of Chenrezig.', img: templeInteriorImg },
+  { id: 2, title: 'Heart Sutra Chanting', artist: 'Senior Lama Dorje', category: 'Morning Prayers', duration: '8:21', durationSec: 501, description: 'A concise recitation of the Prajnaparamita Heart Sutra.' },
+  { id: 3, title: 'Vajra Guru Mantra', artist: 'Kagyu Assembly', category: 'Festival Hymns', duration: '15:47', durationSec: 947, description: 'The mantra of Guru Padmasambhava, chanted during Losar.' },
+  { id: 4, title: 'Green Tara Prayer', artist: 'Monastery Choir', category: 'Festival Hymns', duration: '6:55', durationSec: 415, description: 'A devotional prayer to Green Tara, the female Buddha.' },
+  { id: 5, title: 'Mahakala Puja', artist: 'Ritual Masters', category: 'Monastic Rites', duration: '22:10', durationSec: 1330, description: 'The fierce protector deity invocation, accompanied by drums.' },
+  { id: 6, title: 'Morning Dedication Prayer', artist: 'Abbot Rinpoche', category: 'Morning Prayers', duration: '4:30', durationSec: 270, description: 'The opening prayer dedicating all activities to sentient beings.' },
+  { id: 7, title: 'Tsok Offering Chant', artist: 'Rumtek Sangha', category: 'Monastic Rites', duration: '18:05', durationSec: 1085, description: 'The communal feast offering ritual on auspicious days.' },
+  { id: 8, title: 'Live Dharma Teaching', artist: 'H.H. Karmapa', category: 'Live Events', duration: '45:00', durationSec: 2700, description: 'A live teaching on the nature of mind and meditation.', img: monasteryExteriorImg },
 ];
 
 const categories = ['All', 'Morning Prayers', 'Festival Hymns', 'Monastic Rites', 'Live Events'];
 
+// ─── Component ──────────────────────────────────────────────────────────────
 const ChantingLibrary = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [currentTrack, setCurrentTrack] = useState(null);
@@ -97,46 +171,93 @@ const ChantingLibrary = () => {
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
   const progressInterval = useRef(null);
+  const synthRef = useRef(null);
+
+  // Initialize synth once
+  useEffect(() => {
+    synthRef.current = new MeditationSynth();
+    return () => {
+      if (synthRef.current) synthRef.current.destroy();
+    };
+  }, []);
 
   const filteredChants = activeCategory === 'All'
     ? chants
     : chants.filter(c => c.category === activeCategory);
 
+  const nextTrack = useCallback(() => {
+    const list = filteredChants.length > 0 ? filteredChants : chants;
+    if (!currentTrack) { setCurrentTrack(list[0]); return; }
+    const idx = list.findIndex(c => c.id === currentTrack.id);
+    const nextIdx = isShuffle ? Math.floor(Math.random() * list.length) : (idx + 1) % list.length;
+    const next = list[nextIdx];
+    setCurrentTrack(next);
+    setProgress(0);
+    if (synthRef.current && isPlaying) {
+      synthRef.current.play(next.id, isMuted ? 0 : volume);
+    }
+  }, [currentTrack, filteredChants, isShuffle, isPlaying, isMuted, volume]);
+
+  const prevTrack = useCallback(() => {
+    const list = filteredChants.length > 0 ? filteredChants : chants;
+    if (!currentTrack) return;
+    const idx = list.findIndex(c => c.id === currentTrack.id);
+    const prevIdx = idx === 0 ? list.length - 1 : idx - 1;
+    const prev = list[prevIdx];
+    setCurrentTrack(prev);
+    setProgress(0);
+    if (synthRef.current && isPlaying) {
+      synthRef.current.play(prev.id, isMuted ? 0 : volume);
+    }
+  }, [currentTrack, filteredChants, isPlaying, isMuted, volume]);
+
   const playTrack = (track) => {
     if (currentTrack?.id === track.id) {
-      setIsPlaying(!isPlaying);
+      // Toggle play/pause
+      if (isPlaying) {
+        synthRef.current?.stop();
+        setIsPlaying(false);
+      } else {
+        synthRef.current?.play(track.id, isMuted ? 0 : volume);
+        setIsPlaying(true);
+      }
       return;
     }
     setCurrentTrack(track);
     setIsPlaying(true);
     setProgress(0);
+    synthRef.current?.play(track.id, isMuted ? 0 : volume);
   };
 
-  const nextTrack = () => {
+  const togglePlayPause = () => {
     if (!currentTrack) return;
-    const list = filteredChants.length > 0 ? filteredChants : chants;
-    const idx = list.findIndex(c => c.id === currentTrack.id);
-    const nextIdx = isShuffle ? Math.floor(Math.random() * list.length) : (idx + 1) % list.length;
-    setCurrentTrack(list[nextIdx]);
-    setProgress(0);
+    if (isPlaying) {
+      synthRef.current?.stop();
+      setIsPlaying(false);
+    } else {
+      synthRef.current?.play(currentTrack.id, isMuted ? 0 : volume);
+      setIsPlaying(true);
+    }
   };
 
-  const prevTrack = () => {
-    if (!currentTrack) return;
-    const list = filteredChants.length > 0 ? filteredChants : chants;
-    const idx = list.findIndex(c => c.id === currentTrack.id);
-    const prevIdx = idx === 0 ? list.length - 1 : idx - 1;
-    setCurrentTrack(list[prevIdx]);
-    setProgress(0);
-  };
+  // Volume changes
+  useEffect(() => {
+    if (synthRef.current && isPlaying) {
+      synthRef.current.setVolume(isMuted ? 0 : volume);
+    }
+  }, [volume, isMuted, isPlaying]);
 
-  // Simulate progress
+  // Progress simulation
   useEffect(() => {
     if (isPlaying && currentTrack) {
       progressInterval.current = setInterval(() => {
         setProgress(prev => {
           if (prev >= 100) {
-            if (isRepeat) return 0;
+            if (isRepeat) {
+              synthRef.current?.stop();
+              synthRef.current?.play(currentTrack.id, isMuted ? 0 : volume);
+              return 0;
+            }
             nextTrack();
             return 0;
           }
@@ -146,6 +267,13 @@ const ChantingLibrary = () => {
     }
     return () => clearInterval(progressInterval.current);
   }, [isPlaying, currentTrack, isRepeat]);
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (synthRef.current) synthRef.current.stop();
+    };
+  }, []);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -170,8 +298,8 @@ const ChantingLibrary = () => {
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-serif text-maroon mb-3">Chanting Library</h1>
           <p className="text-sm text-maroon/50 max-w-lg">
-            Immerse yourself in centuries-old sacred chants performed by the monks of Rumtek Monastery. 
-            Each recording preserves the living tradition of Tibetan Buddhist liturgy.
+            Immerse yourself in sacred meditation tones inspired by centuries-old Tibetan Buddhist chanting traditions.
+            Each track generates unique ambient harmonics using singing bowl frequencies.
           </p>
         </div>
 
@@ -192,12 +320,16 @@ const ChantingLibrary = () => {
               <span className="text-[10px] font-bold text-dusty-pink/80 uppercase tracking-widest mb-3 block">✦ Featured Chant</span>
               <h2 className="text-3xl md:text-4xl font-serif text-white mb-3">Om Mani Padme Hum</h2>
               <p className="text-white/50 text-sm max-w-md leading-relaxed">
-                The most sacred mantra of compassion, chanted in the ancient melodic tradition of the Kagyu lineage. Start your day with serenity.
+                The sacred 136.1 Hz Om frequency — tuned to the cosmic vibration. Tap to begin your meditation.
               </p>
             </div>
             <div className="flex items-center gap-4">
               <button className="w-16 h-16 bg-dusty-pink text-deep-brown rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
-                <Play className="w-7 h-7 ml-1 fill-current" />
+                {currentTrack?.id === 1 && isPlaying ? (
+                  <Pause className="w-7 h-7 fill-current" />
+                ) : (
+                  <Play className="w-7 h-7 ml-1 fill-current" />
+                )}
               </button>
               <div className="text-white/40 text-xs font-bold">12:34</div>
             </div>
@@ -337,7 +469,7 @@ const ChantingLibrary = () => {
                     <SkipBack className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => setIsPlaying(!isPlaying)}
+                    onClick={togglePlayPause}
                     className="w-12 h-12 bg-dusty-pink text-deep-brown rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
                   >
                     {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 ml-0.5 fill-current" />}

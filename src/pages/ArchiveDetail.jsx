@@ -146,7 +146,15 @@ const ArchiveDetail = () => {
 
             {/* Action buttons */}
             <div className="flex gap-3 mt-6">
-              <button className="flex-1 bg-maroon text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-maroon-dark transition-all shadow-lg shadow-maroon/20">
+              <button 
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = item.img;
+                  link.download = `${item.id}-hd-scan.png`;
+                  link.click();
+                }}
+                className="flex-1 bg-maroon text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-maroon-dark transition-all shadow-lg shadow-maroon/20"
+              >
                 <Download className="w-5 h-5" /> Download HD Scan
               </button>
               <button

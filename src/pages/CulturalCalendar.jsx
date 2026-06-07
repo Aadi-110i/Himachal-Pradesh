@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MainLayout from '../components/layout/MainLayout';
-import { motion } from 'framer-motion';
-import { Calendar, Users, MapPin, ArrowRight, Bell, Ticket } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Users, MapPin, ArrowRight, Bell, Ticket, X, CheckCircle2, Clock, User, Mail, Phone } from 'lucide-react';
 
 // Assets
 import templeInteriorImg from '../assets/temple_interior.png';
@@ -9,6 +9,11 @@ import monasteryExteriorImg from '../assets/monastery_exterior.png';
 import ceremonialMaskImg from '../assets/ceremonial_mask.png';
 
 const CulturalCalendar = () => {
+  const [bookingEvent, setBookingEvent] = useState(null);
+  const [bookingStep, setBookingStep] = useState('form'); // 'form' | 'confirmed'
+  const [reminders, setReminders] = useState({});
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', guests: '1', notes: '' });
+
   const events = [
     { 
       name: "Losar Festival", 
@@ -16,7 +21,10 @@ const CulturalCalendar = () => {
       loc: "Rumtek Monastery", 
       desc: "Tibetan New Year celebrations featuring traditional Cham dances and rituals to ward off evil spirits.",
       type: "Major Festival",
-      img: templeInteriorImg
+      img: templeInteriorImg,
+      time: "6:00 AM - 8:00 PM",
+      capacity: "2,500 visitors",
+      fee: "Free (Donation welcome)",
     },
     { 
       name: "Saga Dawa", 
@@ -24,7 +32,10 @@ const CulturalCalendar = () => {
       loc: "Tsuklakhang Palace", 
       desc: "The most sacred day for Buddhists, marking the birth, enlightenment, and parinirvana of Lord Buddha.",
       type: "Religious Ritual",
-      img: monasteryExteriorImg
+      img: monasteryExteriorImg,
+      time: "5:00 AM - 6:00 PM",
+      capacity: "1,500 visitors",
+      fee: "Free",
     },
     { 
       name: "Pang Lhabsol", 
@@ -32,9 +43,27 @@ const CulturalCalendar = () => {
       loc: "Mt. Kanchenjunga Foothills", 
       desc: "Celebrating the guardian deity of Sikkim. A day of unity between the Lepcha and Bhutia communities.",
       type: "Cultural Heritage",
-      img: ceremonialMaskImg
+      img: ceremonialMaskImg,
+      time: "7:00 AM - 5:00 PM",
+      capacity: "3,000 visitors",
+      fee: "₹200 (Heritage pass)",
     }
   ];
+
+  const handleBooking = (event) => {
+    setBookingEvent(event);
+    setBookingStep('form');
+    setFormData({ name: '', email: '', phone: '', guests: '1', notes: '' });
+  };
+
+  const handleSubmitBooking = (e) => {
+    e.preventDefault();
+    setBookingStep('confirmed');
+  };
+
+  const toggleReminder = (eventName) => {
+    setReminders(prev => ({ ...prev, [eventName]: !prev[eventName] }));
+  };
 
   return (
     <MainLayout>
@@ -80,21 +109,53 @@ const CulturalCalendar = () => {
                        <Calendar className="w-5 h-5 text-maroon/40" />
                     </div>
                   </div>
-                  <p className="text-maroon/60 text-sm leading-relaxed mb-8">
+                  <p className="text-maroon/60 text-sm leading-relaxed mb-4">
                     {e.desc}
                   </p>
-                  <div className="flex items-center gap-6 mb-8 text-xs font-bold text-maroon/70">
+
+                  {/* Event details */}
+                  <div className="bg-cream-dark rounded-2xl p-4 mb-6 space-y-2">
+                    <div className="flex items-center gap-2 text-xs text-maroon/70">
+                      <Clock className="w-3.5 h-3.5 text-maroon" /> <span className="font-bold">{e.date}</span> · {e.time}
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-maroon/70">
+                      <Users className="w-3.5 h-3.5 text-maroon" /> Capacity: {e.capacity}
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-maroon/70">
+                      <Ticket className="w-3.5 h-3.5 text-maroon" /> {e.fee}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-6 mb-6 text-xs font-bold text-maroon/70">
                     <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-maroon" /> {e.loc}</div>
-                    <div className="flex items-center gap-2"><Users className="w-4 h-4 text-maroon" /> 2k+ expected</div>
                   </div>
                   <div className="flex gap-4">
-                    <button className="flex-grow bg-maroon text-white py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-maroon-dark transition-all flex items-center justify-center gap-2 shadow-lg shadow-maroon/20">
+                    <button 
+                      onClick={() => handleBooking(e)}
+                      className="flex-grow bg-maroon text-white py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-maroon-dark transition-all flex items-center justify-center gap-2 shadow-lg shadow-maroon/20"
+                    >
                       <Ticket className="w-4 h-4" /> Book Participation
                     </button>
-                    <button className="w-14 h-14 border border-maroon/10 rounded-2xl flex items-center justify-center hover:bg-cream-dark transition-all text-maroon/40 hover:text-maroon">
-                      <Bell className="w-4 h-4" />
+                    <button 
+                      onClick={() => toggleReminder(e.name)}
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all border ${
+                        reminders[e.name] 
+                          ? 'bg-maroon text-white border-maroon' 
+                          : 'border-maroon/10 text-maroon/40 hover:bg-cream-dark hover:text-maroon'
+                      }`}
+                    >
+                      <Bell className={`w-4 h-4 ${reminders[e.name] ? 'animate-bounce' : ''}`} />
                     </button>
                   </div>
+                  {reminders[e.name] && (
+                    <motion.p 
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-[10px] text-maroon/50 mt-3 text-center font-medium"
+                    >
+                      ✓ Reminder set — we'll notify you before the event
+                    </motion.p>
+                  )}
                 </div>
               </div>
               
@@ -105,6 +166,194 @@ const CulturalCalendar = () => {
           ))}
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <AnimatePresence>
+        {bookingEvent && (
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-8">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setBookingEvent(null)}
+              className="absolute inset-0 bg-black/50 backdrop-blur-md"
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto"
+            >
+              {/* Modal Header */}
+              <div className="relative h-40 overflow-hidden">
+                <img src={bookingEvent.img} className="w-full h-full object-cover" alt={bookingEvent.name} />
+                <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 to-transparent" />
+                <div className="absolute bottom-4 left-6 right-6">
+                  <span className="text-[9px] font-bold text-white/60 uppercase tracking-widest">{bookingEvent.type}</span>
+                  <h2 className="text-2xl font-serif text-white">{bookingEvent.name}</h2>
+                </div>
+                <button 
+                  onClick={() => setBookingEvent(null)}
+                  className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-all"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-8">
+                {bookingStep === 'form' ? (
+                  <>
+                    {/* Event Info */}
+                    <div className="bg-cream-dark rounded-2xl p-4 mb-8 space-y-2">
+                      <div className="flex items-center gap-2 text-xs text-maroon/70">
+                        <Calendar className="w-3.5 h-3.5 text-maroon" /> {bookingEvent.date}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-maroon/70">
+                        <MapPin className="w-3.5 h-3.5 text-maroon" /> {bookingEvent.loc}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-maroon/70">
+                        <Ticket className="w-3.5 h-3.5 text-maroon" /> {bookingEvent.fee}
+                      </div>
+                    </div>
+
+                    {/* Booking Form */}
+                    <form onSubmit={handleSubmitBooking} className="space-y-5">
+                      <div>
+                        <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Full Name *</label>
+                        <div className="relative">
+                          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30" />
+                          <input 
+                            type="text" 
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData(p => ({...p, name: e.target.value}))}
+                            placeholder="Enter your full name"
+                            className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Email Address *</label>
+                        <div className="relative">
+                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30" />
+                          <input 
+                            type="email" 
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData(p => ({...p, email: e.target.value}))}
+                            placeholder="your@email.com"
+                            className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Phone</label>
+                          <div className="relative">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30" />
+                            <input 
+                              type="tel"
+                              value={formData.phone}
+                              onChange={(e) => setFormData(p => ({...p, phone: e.target.value}))}
+                              placeholder="+91..."
+                              className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Guests *</label>
+                          <select 
+                            value={formData.guests}
+                            onChange={(e) => setFormData(p => ({...p, guests: e.target.value}))}
+                            className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 px-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 appearance-none"
+                          >
+                            {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                              <option key={n} value={n}>{n} {n === 1 ? 'person' : 'people'}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Special Requests</label>
+                        <textarea 
+                          value={formData.notes}
+                          onChange={(e) => setFormData(p => ({...p, notes: e.target.value}))}
+                          placeholder="Dietary requirements, accessibility needs..."
+                          rows={3}
+                          className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 px-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20 resize-none"
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        className="w-full bg-maroon text-white py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-maroon-dark transition-all shadow-lg shadow-maroon/20 flex items-center justify-center gap-3"
+                      >
+                        <Ticket className="w-5 h-5" /> Confirm Booking
+                      </button>
+                    </form>
+                  </>
+                ) : (
+                  /* Confirmation */
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-8"
+                  >
+                    <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+                    </div>
+                    <h3 className="text-2xl font-serif text-maroon mb-3">Booking Confirmed!</h3>
+                    <p className="text-sm text-maroon/60 mb-2">
+                      You're registered for <strong>{bookingEvent.name}</strong>
+                    </p>
+                    <p className="text-xs text-maroon/40 mb-8">
+                      A confirmation email has been sent to <strong>{formData.email}</strong>
+                    </p>
+
+                    <div className="bg-cream-dark rounded-2xl p-5 mb-8 text-left space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-maroon/40 font-bold">Booking ID</span>
+                        <span className="text-maroon font-serif">HH-{Date.now().toString().slice(-6)}</span>
+                      </div>
+                      <div className="w-full h-px bg-maroon/5" />
+                      <div className="flex justify-between text-xs">
+                        <span className="text-maroon/40 font-bold">Guest</span>
+                        <span className="text-maroon">{formData.name}</span>
+                      </div>
+                      <div className="w-full h-px bg-maroon/5" />
+                      <div className="flex justify-between text-xs">
+                        <span className="text-maroon/40 font-bold">Party Size</span>
+                        <span className="text-maroon">{formData.guests} {parseInt(formData.guests) === 1 ? 'person' : 'people'}</span>
+                      </div>
+                      <div className="w-full h-px bg-maroon/5" />
+                      <div className="flex justify-between text-xs">
+                        <span className="text-maroon/40 font-bold">Date</span>
+                        <span className="text-maroon">{bookingEvent.date}</span>
+                      </div>
+                      <div className="w-full h-px bg-maroon/5" />
+                      <div className="flex justify-between text-xs">
+                        <span className="text-maroon/40 font-bold">Location</span>
+                        <span className="text-maroon">{bookingEvent.loc}</span>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => setBookingEvent(null)}
+                      className="w-full bg-maroon text-white py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-maroon-dark transition-all"
+                    >
+                      Done
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </MainLayout>
   );
 };

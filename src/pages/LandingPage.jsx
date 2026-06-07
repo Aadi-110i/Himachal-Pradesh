@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles, Home, Users, MoreHorizontal } from 'lucide-react';
-import { useNavigate, NavLink, useLocation } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 // Assets
 import monasteryExteriorImg from '../assets/monastery_exterior.png';
@@ -19,7 +19,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-cream font-sans text-gray-900">
+    <div className="min-h-screen bg-cream font-sans text-gray-900 pb-20">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-cream/80 backdrop-blur-md px-8 py-6 flex justify-between items-center">
         <h1 className="text-2xl font-serif font-bold text-maroon tracking-tight">Himachal<span className="italic opacity-60">Heritage</span></h1>
@@ -146,7 +146,7 @@ const LandingPage = () => {
                 type="text" 
                 placeholder="Search for temples, deities, or history..."
                 className="w-full bg-cream rounded-full py-5 pl-14 pr-6 text-sm border-none focus:ring-2 focus:ring-maroon/10 placeholder:text-maroon/20 shadow-inner"
-                onKeyDown={(e) => { if (e.key === 'Enter') navigate('/archives'); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') navigate('/archives', { state: { query: e.target.value } }); }}
               />
             </div>
             <div className="flex justify-center gap-12 text-maroon/40">
