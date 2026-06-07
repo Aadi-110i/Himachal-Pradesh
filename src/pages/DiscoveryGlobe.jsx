@@ -7,19 +7,61 @@ import MainLayout from '../components/layout/MainLayout';
 import { Sparkles, ArrowRight, X, Landmark, MapPin, Compass, Loader2 } from 'lucide-react';
 import { getRandomLocation } from '../data/locations';
 import mapTexture from '../assets/map2.png';
+import * as THREE from 'three';
 
-function GlobeModel({ isSpinning, texture }) {
+const getSphericalCoords = (lat, lng, radius) => {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  
+  const x = -(radius * Math.sin(phi) * Math.cos(theta));
+  const z = (radius * Math.sin(phi) * Math.sin(theta));
+  const y = (radius * Math.cos(phi));
+  
+  return [x, y, z];
+};
+
+function GlobeModel({ isSpinning, texture, selectedLoc, onMarkerClick }) {
   const globeRef = useRef();
   const rotationSpeed = useRef(0.005);
+  const markerRef = useRef();
+  const targetYRef = useRef(null);
 
   useFrame((state, delta) => {
     if (isSpinning) {
       rotationSpeed.current = Math.min(rotationSpeed.current + 0.01, 0.15);
-    } else {
+      if (globeRef.current) {
+        globeRef.current.rotation.y += rotationSpeed.current;
+        targetYRef.current = null; // Reset target
+      }
+    } else if (selectedLoc && globeRef.current) {
+      if (targetYRef.current === null) {
+        const theta = (selectedLoc.lng + 180) * (Math.PI / 180);
+        // Math.PI / 2 centers it to the camera
+        const baseTarget = (Math.PI / 2) - theta;
+        
+        const currentY = globeRef.current.rotation.y;
+        const twoPi = Math.PI * 2;
+        let diff = (baseTarget - (currentY % twoPi));
+        
+        // Ensure it rotates forward to stop
+        if (diff < 0) diff += twoPi;
+        
+        targetYRef.current = currentY + diff;
+      }
+      
+      // Smoothly interpolate to the exact target angle
+      globeRef.current.rotation.y = THREE.MathUtils.lerp(
+        globeRef.current.rotation.y,
+        targetYRef.current,
+        0.03
+      );
+    } else if (globeRef.current) {
       rotationSpeed.current = Math.max(rotationSpeed.current - 0.005, 0.005);
-    }
-    if (globeRef.current) {
       globeRef.current.rotation.y += rotationSpeed.current;
+    }
+    
+    if (markerRef.current) {
+       markerRef.current.scale.setScalar(1 + Math.sin(state.clock.elapsedTime * 6) * 0.3);
     }
   });
 
@@ -30,12 +72,32 @@ function GlobeModel({ isSpinning, texture }) {
         <sphereGeometry args={[2.2, 64, 64]} />
         <meshStandardMaterial 
           map={texture} 
-          metalness={0.4} 
-          roughness={0.7}
+          bumpMap={texture}
+          bumpScale={0.08}
+          metalness={0.15} 
+          roughness={0.6}
           emissive="#ffffff"
-          emissiveIntensity={0.05}
+          emissiveIntensity={0.02}
         />
       </mesh>
+      
+      {/* 3D Marker */}
+      {selectedLoc && !isSpinning && (
+        <mesh 
+          ref={markerRef}
+          position={getSphericalCoords(selectedLoc.lat, selectedLoc.lng, 2.25)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onMarkerClick();
+          }}
+          onPointerOver={() => document.body.style.cursor = 'pointer'}
+          onPointerOut={() => document.body.style.cursor = 'default'}
+        >
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshBasicMaterial color="#f97316" />
+          <pointLight color="#f97316" intensity={2} distance={2} />
+        </mesh>
+      )}
     </group>
   );
 }
@@ -67,12 +129,12 @@ const DiscoveryGlobe = () => {
     if (isSpinning || !texture) return;
     setIsSpinning(true);
     setShowReveal(false);
+    setSelectedLoc(null);
     
     setTimeout(() => {
       setIsSpinning(false);
       const loc = getRandomLocation();
       setSelectedLoc(loc);
-      setTimeout(() => setShowReveal(true), 1000);
     }, 2500);
   };
 
@@ -95,7 +157,7 @@ const DiscoveryGlobe = () => {
         </div>
 
         {/* 3D Scene / Loading State */}
-        <div className="w-full h-full cursor-pointer relative" onClick={handleSpin}>
+        <div className="w-full h-full relative">
           {!texture && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 z-20">
                <Loader2 className="w-8 h-8 text-orange-300 animate-spin" />
@@ -110,13 +172,19 @@ const DiscoveryGlobe = () => {
           )}
 
           <Canvas shadows camera={{ position: [0, 0, 8], fov: 45 }}>
-            <ambientLight intensity={0.8} />
-            <pointLight position={[10, 10, 10]} intensity={1.5} />
+            <ambientLight intensity={0.15} />
+            <directionalLight position={[5, 3, 5]} intensity={2.5} castShadow />
+            <pointLight position={[-10, -10, -10]} intensity={1.5} color="#5555ff" />
             
             <Suspense fallback={null}>
               {texture && (
                 <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
-                  <GlobeModel isSpinning={isSpinning} texture={texture} />
+                  <GlobeModel 
+                    isSpinning={isSpinning} 
+                    texture={texture} 
+                    selectedLoc={selectedLoc}
+                    onMarkerClick={() => setShowReveal(true)}
+                  />
                 </Float>
               )}
               <Environment preset="night" />
@@ -125,8 +193,7 @@ const DiscoveryGlobe = () => {
             <OrbitControls 
               enableZoom={false} 
               enablePan={false} 
-              autoRotate={!isSpinning && texture} 
-              autoRotateSpeed={0.5} 
+              autoRotate={false} 
             />
           </Canvas>
         </div>
@@ -206,19 +273,40 @@ const DiscoveryGlobe = () => {
           )}
         </AnimatePresence>
 
-        {/* Spin Prompt */}
+        {/* Spin Prompt / Spin Button */}
         {!showReveal && texture && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="absolute bottom-12 z-10 pointer-events-none"
+            className="absolute bottom-16 z-10 flex flex-col items-center gap-4"
           >
-             <div className="flex flex-col items-center gap-4">
-                <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 flex items-center gap-3 text-white/60">
-                   <Sparkles className="w-4 h-4 text-orange-300" />
-                   <span className="text-[10px] font-bold uppercase tracking-widest">Click Globe to Spin</span>
-                </div>
-             </div>
+             {!selectedLoc || isSpinning ? (
+               <button 
+                 onClick={handleSpin}
+                 disabled={isSpinning}
+                 className={`flex items-center gap-3 px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all ${
+                   isSpinning 
+                   ? 'bg-white/10 text-white/40 border border-white/10 cursor-not-allowed' 
+                   : 'bg-orange-500 hover:bg-orange-400 text-white shadow-xl shadow-orange-500/30 hover:scale-105'
+                 }`}
+               >
+                 <Sparkles className="w-5 h-5" />
+                 {isSpinning ? 'Consulting Oracle...' : 'Spin the Globe'}
+               </button>
+             ) : (
+               <div className="flex flex-col items-center gap-4">
+                 <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 flex items-center gap-3 text-white">
+                    <MapPin className="w-4 h-4 text-orange-400 animate-bounce" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Click the glowing marker on the globe to reveal fate</span>
+                 </div>
+                 <button 
+                   onClick={handleSpin}
+                   className="text-[10px] text-white/40 hover:text-white uppercase tracking-widest font-bold underline decoration-white/20 underline-offset-4 transition-colors"
+                 >
+                   Spin Again
+                 </button>
+               </div>
+             )}
           </motion.div>
         )}
       </div>

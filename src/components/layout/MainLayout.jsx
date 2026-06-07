@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Home, Map as MapIcon, Box, LogIn, Menu, X, Landmark, Globe, Archive, Calendar, MoreHorizontal, Users, Compass, Plane } from 'lucide-react';
+import { Home, Map as MapIcon, Box, LogIn, Menu, X, Landmark, Globe, Archive, Calendar, MoreHorizontal, Users, Compass, Plane, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../../context/GameContext';
 import AudioGuide from '../ui/AudioGuide';
