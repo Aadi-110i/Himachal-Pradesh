@@ -13,6 +13,7 @@ import CulturalCalendar from './pages/CulturalCalendar';
 import PanoramaView from './pages/PanoramaView';
 import ArchiveDetail from './pages/ArchiveDetail';
 import ChantingLibrary from './pages/ChantingLibrary';
+import TravelBooking from './pages/TravelBooking';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/ar" element={<ARViewer />} />
         <Route path="/map" element={<MapNavigation />} />
         <Route path="/panorama/:id" element={<PanoramaView />} />
+        <Route path="/booking" element={<TravelBooking />} />
         <Route path="/archives" element={<DigitalArchives />} />
         <Route path="/archives/:id" element={<ArchiveDetail />} />
         <Route path="/calendar" element={<CulturalCalendar />} />

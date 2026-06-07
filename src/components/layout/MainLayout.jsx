@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Home, Map as MapIcon, Box, LogIn, Menu, X, Landmark, Globe, Archive, Calendar, MoreHorizontal, Users, Compass } from 'lucide-react';
+import { Home, Map as MapIcon, Box, LogIn, Menu, X, Landmark, Globe, Archive, Calendar, MoreHorizontal, Users, Compass, Plane } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../../context/GameContext';
 import AudioGuide from '../ui/AudioGuide';
@@ -15,8 +15,8 @@ const MainLayout = ({ children }) => {
     { name: 'Home', path: '/dashboard', icon: Home },
     { name: 'Map', path: '/map', icon: MapIcon },
     { name: 'Tours', path: '/ar', icon: Compass },
+    { name: 'Travel', path: '/booking', icon: Plane },
     { name: 'Community', path: '/calendar', icon: Users },
-    { name: 'More', path: '/archives', icon: MoreHorizontal },
   ];
 
   const getPageTitle = () => {
@@ -24,9 +24,10 @@ const MainLayout = ({ children }) => {
       case '/dashboard': return 'Discover';
       case '/map': return 'Heritage Map';
       case '/ar': return '360° Tours';
+      case '/booking': return 'Plan Journey';
       case '/archives': return 'Archives';
       case '/calendar': return 'Community';
-      default: return 'Sikkim Heritage';
+      default: return 'Himachal Heritage';
     }
   };
 
