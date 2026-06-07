@@ -86,7 +86,7 @@ const Login = () => {
                  </div>
 
                  <button 
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate('/')}
                   className="w-full bg-maroon text-white py-5 rounded-full font-bold text-sm shadow-xl shadow-maroon/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group"
                  >
                    Enter the Sanctum
