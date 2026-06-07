@@ -14,6 +14,7 @@ import PanoramaView from './pages/PanoramaView';
 import ArchiveDetail from './pages/ArchiveDetail';
 import ChantingLibrary from './pages/ChantingLibrary';
 import TravelBooking from './pages/TravelBooking';
+import Feedback from './pages/Feedback';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/archives/:id" element={<ArchiveDetail />} />
         <Route path="/calendar" element={<CulturalCalendar />} />
         <Route path="/chanting" element={<ChantingLibrary />} />
+        <Route path="/feedback" element={<Feedback />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

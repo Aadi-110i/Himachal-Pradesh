@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import { motion } from 'framer-motion';
 import { Plane, Car, Home, Compass, MapPin, Star, Clock, ChevronRight, Filter } from 'lucide-react';
+import spitiHomestayImg from '../assets/spiti_valley_homestay.png';
+import hamptaPassImg from '../assets/hampta_pass_trek.png';
 
 const TravelBooking = () => {
   const [activeTab, setActiveTab] = useState('stays');
@@ -14,7 +16,7 @@ const TravelBooking = () => {
 
   const bookings = {
     stays: [
-      { id: 1, name: "Spiti Valley Homestay", loc: "Kaza", price: "₹1,200/night", rating: 4.9, img: "https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=400" },
+      { id: 1, name: "Spiti Valley Homestay", loc: "Kaza", price: "₹1,200/night", rating: 4.9, img: spitiHomestayImg },
       { id: 2, name: "Old Manali Riverside", loc: "Manali", price: "₹2,500/night", rating: 4.8, img: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&q=80&w=400" },
     ],
     transport: [
@@ -23,7 +25,7 @@ const TravelBooking = () => {
     ],
     tours: [
       { id: 5, name: "Key Monastery Spiritual Tour", loc: "3 Days", price: "₹8,500", rating: 5.0, img: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&q=80&w=400" },
-      { id: 6, name: "Hampta Pass Trek", loc: "5 Days", price: "₹12,000", rating: 4.8, img: "https://images.unsplash.com/photo-1590056911679-62323cc60a6a?auto=format&fit=crop&q=80&w=400" },
+      { id: 6, name: "Hampta Pass Trek", loc: "5 Days", price: "₹12,000", rating: 4.8, img: hamptaPassImg },
     ]
   };
 

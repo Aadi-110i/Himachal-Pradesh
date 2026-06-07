@@ -355,6 +355,7 @@ const LandingPage = () => {
               <button onClick={() => navigate('/calendar')} className="text-xs text-maroon/60 hover:text-maroon text-left">Community</button>
               <button onClick={() => navigate('/archives')} className="text-xs text-maroon/60 hover:text-maroon text-left">Archives</button>
               <button onClick={() => navigate('/dashboard')} className="text-xs text-maroon/60 hover:text-maroon text-left">Dashboard</button>
+              <button onClick={() => navigate('/feedback')} className="text-xs text-maroon/60 hover:text-maroon text-left">Feedback</button>
             </div>
           </div>
         </div>
