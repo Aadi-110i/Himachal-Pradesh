@@ -22,7 +22,7 @@ const LandingPage = () => {
     <div className="min-h-screen bg-cream font-sans text-gray-900 pb-20">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-cream/80 backdrop-blur-md px-8 py-6 flex justify-between items-center">
-        <h1 className="text-2xl font-serif font-bold text-maroon tracking-tight">Himachal<span className="italic opacity-60">Heritage</span></h1>
+        <h1 className="text-2xl font-serif font-bold text-maroon tracking-tight">Himachal<span className="italic opacity-60">Treasures</span></h1>
         <div className="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-maroon/60">
           <button onClick={() => navigate('/map')} className="hover:text-maroon transition-colors">Explorer</button>
           <button onClick={() => navigate('/booking')} className="hover:text-maroon transition-colors">Travel</button>

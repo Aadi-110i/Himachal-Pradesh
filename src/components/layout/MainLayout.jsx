@@ -28,7 +28,7 @@ const MainLayout = ({ children }) => {
       case '/globe': return 'Divine Discovery';
       case '/archives': return 'Archives';
       case '/calendar': return 'Community';
-      default: return 'Himachal Heritage';
+      default: return 'Himachal Treasures';
     }
   };
 

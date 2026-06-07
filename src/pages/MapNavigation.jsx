@@ -131,7 +131,7 @@ const MapNavigation = () => {
               <img 
                 src={mapImageHimachal} 
                 className="w-full h-full object-contain" 
-                alt="Himachal Heritage Map" 
+                alt="Himachal Treasures Map" 
               />
             </div>
 
