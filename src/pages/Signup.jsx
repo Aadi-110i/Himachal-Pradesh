@@ -1,135 +1,135 @@
-import React, { useState } from 'react';
-import MainLayout from '../components/layout/MainLayout';
-import { User, Mail, Lock, ArrowRight, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, User, ArrowRight, Github, Chrome, ChevronLeft, Sparkles, ShieldCheck } from 'lucide-react';
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-    navigate('/dashboard');
-  };
-
-  const updateField = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setError('');
-  };
-
-  const passwordStrength = formData.password.length === 0 ? 0 
-    : formData.password.length < 6 ? 1 
-    : formData.password.length < 10 ? 2 : 3;
-
-  const strengthLabels = ['', 'Weak', 'Good', 'Strong'];
-  const strengthColors = ['', 'bg-red-400', 'bg-yellow-400', 'bg-emerald-400'];
 
   return (
-    <MainLayout>
-      <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md bg-white border border-maroon/5 p-10 rounded-[2.5rem] shadow-xl">
-          <div className="flex flex-col items-center mb-10 text-center">
-            <div className="w-16 h-16 bg-maroon rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-maroon/20">
-              <User className="text-white w-8 h-8" />
-            </div>
-            <h1 className="text-3xl font-serif text-maroon mb-2">Create Account</h1>
-            <p className="text-maroon/50 text-sm">Join the digital preservation movement</p>
-          </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-100 text-red-600 text-xs font-medium px-4 py-3 rounded-2xl mb-6 text-center">
-              {error}
-            </div>
-          )}
-
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest px-2">Full Name</label>
-              <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-maroon/20 group-focus-within:text-maroon transition-colors" />
-                <input 
-                  type="text" 
-                  value={formData.name}
-                  onChange={(e) => updateField('name', e.target.value)}
-                  placeholder="John Doe"
-                  className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-4 pl-12 pr-4 text-maroon placeholder:text-maroon/20 focus:outline-none focus:border-maroon/20 transition-all"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest px-2">Email Address</label>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-maroon/20 group-focus-within:text-maroon transition-colors" />
-                <input 
-                  type="email" 
-                  value={formData.email}
-                  onChange={(e) => updateField('email', e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-4 pl-12 pr-4 text-maroon placeholder:text-maroon/20 focus:outline-none focus:border-maroon/20 transition-all"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest px-2">Password</label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-maroon/20 group-focus-within:text-maroon transition-colors" />
-                <input 
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={(e) => updateField('password', e.target.value)}
-                  placeholder="Min 6 characters"
-                  className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-4 pl-12 pr-12 text-maroon placeholder:text-maroon/20 focus:outline-none focus:border-maroon/20 transition-all"
-                  required
-                />
-                <button 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-maroon/30 hover:text-maroon transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-              {/* Password strength indicator */}
-              {formData.password.length > 0 && (
-                <div className="flex items-center gap-2 px-2 mt-1">
-                  <div className="flex gap-1 flex-grow">
-                    {[1,2,3].map(level => (
-                      <div key={level} className={`h-1 flex-1 rounded-full transition-all ${passwordStrength >= level ? strengthColors[passwordStrength] : 'bg-maroon/10'}`} />
-                    ))}
-                  </div>
-                  <span className={`text-[10px] font-bold ${passwordStrength === 1 ? 'text-red-400' : passwordStrength === 2 ? 'text-yellow-500' : 'text-emerald-500'}`}>
-                    {strengthLabels[passwordStrength]}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <button 
-              type="submit"
-              className="w-full bg-maroon hover:bg-maroon-dark text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-maroon/20 flex items-center justify-center gap-3"
-            >
-              Create Account <ArrowRight className="w-5 h-5" />
-            </button>
-          </form>
-
-          <div className="mt-8 pt-8 border-t border-maroon/5">
-            <p className="text-center text-sm text-maroon/50">
-              Already have an account? <button onClick={() => navigate('/login')} className="text-maroon font-bold hover:text-maroon-dark">Log in</button>
-            </p>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#fdfaf6] flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Ornaments */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] aspect-square rounded-full bg-maroon/20 blur-[120px]" />
+         <div className="absolute top-[-10%] right-[-10%] w-[40%] aspect-square rounded-full bg-orange-200/30 blur-[120px]" />
       </div>
-    </MainLayout>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-5xl bg-white rounded-[3rem] shadow-[0_40px_100px_-20px_rgba(107,76,76,0.15)] flex flex-col md:flex-row-reverse overflow-hidden relative z-10"
+      >
+        {/* Left Side: Visual/Brand (Reversed for Signup) */}
+        <div className="w-full md:w-5/12 bg-maroon p-12 text-white flex flex-col justify-between relative overflow-hidden">
+           <div className="absolute inset-0 opacity-10 pointer-events-none">
+              <div className="absolute bottom-10 left-[-20%] w-64 h-64 border-[30px] border-white rounded-full" />
+              <div className="absolute top-[-10%] right-[-20%] w-80 h-80 border-[1px] border-white/20 rounded-full" />
+           </div>
+
+           <button 
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group self-end"
+           >
+             <span className="text-[10px] font-bold uppercase tracking-widest">Back to Sanctum</span>
+             <ChevronLeft className="w-4 h-4 group-hover:translate-x-1 transition-transform rotate-180" />
+           </button>
+
+           <div className="relative z-10">
+              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-8">
+                 <ShieldCheck className="w-6 h-6 text-orange-200" />
+              </div>
+              <h2 className="text-4xl font-serif mb-4 leading-tight">Join the <br /> <span className="italic opacity-60">Guardians.</span></h2>
+              <p className="text-white/50 text-sm leading-relaxed max-w-xs">
+                Create an account to contribute to the preservation of Devbhumi's sacred heritage and unlock exclusive content.
+              </p>
+           </div>
+
+           <div className="flex items-center gap-4 text-white/30 self-end">
+              <span className="text-[9px] font-bold uppercase tracking-[0.3em]">Himachal Heritage © 2026</span>
+           </div>
+        </div>
+
+        {/* Right Side: Form */}
+        <div className="flex-grow p-12 md:p-20 bg-white">
+           <div className="max-w-sm mx-auto">
+              <div className="mb-10 text-center md:text-left">
+                 <h3 className="text-2xl font-serif text-maroon mb-2">Create your account</h3>
+                 <p className="text-sm text-gray-400">Already a guardian? <button onClick={() => navigate('/login')} className="text-maroon font-bold hover:underline">Log in instead</button></p>
+              </div>
+
+              <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                    <div className="relative group">
+                       <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
+                       <input 
+                        type="text" 
+                        placeholder="Tenzin Gyatso"
+                        className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                       />
+                    </div>
+                 </div>
+
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <div className="relative group">
+                       <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
+                       <input 
+                        type="email" 
+                        placeholder="monk@devbhumi.com"
+                        className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                       />
+                    </div>
+                 </div>
+
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Password</label>
+                    <div className="relative group">
+                       <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
+                       <input 
+                        type="password" 
+                        placeholder="••••••••"
+                        className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                       />
+                    </div>
+                 </div>
+
+                 <div className="flex items-start gap-3 px-1 py-2">
+                    <input type="checkbox" className="mt-1 rounded border-gray-200 text-maroon focus:ring-maroon/20 cursor-pointer" />
+                    <p className="text-[10px] text-gray-400 leading-relaxed uppercase tracking-tight">
+                       I agree to the <span className="text-maroon font-bold">Terms of Service</span> and <span className="text-maroon font-bold">Privacy Policy</span> regarding digital heritage preservation.
+                    </p>
+                 </div>
+
+                 <button 
+                  onClick={() => navigate('/dashboard')}
+                  className="w-full bg-maroon text-white py-5 rounded-full font-bold text-sm shadow-xl shadow-maroon/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group"
+                 >
+                   Become a Guardian
+                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                 </button>
+              </form>
+
+              <div className="my-10 flex items-center gap-4">
+                 <div className="flex-grow h-px bg-gray-100" />
+                 <span className="text-[9px] font-bold text-gray-300 uppercase tracking-[0.2em]">Quick Signup</span>
+                 <div className="flex-grow h-px bg-gray-100" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                 <button className="flex items-center justify-center gap-3 py-4 border-2 border-gray-50 rounded-2xl hover:bg-gray-50 hover:border-gray-100 transition-all group">
+                    <Chrome className="w-4 h-4 text-gray-400 group-hover:text-maroon transition-colors" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-maroon">Google</span>
+                 </button>
+                 <button className="flex items-center justify-center gap-3 py-4 border-2 border-gray-50 rounded-2xl hover:bg-gray-50 hover:border-gray-100 transition-all group">
+                    <Github className="w-4 h-4 text-gray-400 group-hover:text-maroon transition-colors" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-maroon">Github</span>
+                 </button>
+              </div>
+           </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

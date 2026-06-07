@@ -12,7 +12,7 @@ const MainLayout = ({ children }) => {
   const { language, toggleLanguage } = useGame();
 
   const navItems = [
-    { name: 'Home', path: '/dashboard', icon: Home },
+    { name: 'Home', path: '/', icon: Home },
     { name: 'Map', path: '/map', icon: MapIcon },
     { name: 'Tours', path: '/ar', icon: Compass },
     { name: 'Travel', path: '/booking', icon: Plane },

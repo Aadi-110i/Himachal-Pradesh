@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles, Home, Users, MoreHorizontal } from 'lucide-react';
+import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles, Home, Users, Plane, ShieldCheck, Quote, ShoppingBag, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { useNavigate, NavLink } from 'react-router-dom';
 
 // Assets
@@ -25,15 +25,30 @@ const LandingPage = () => {
         <h1 className="text-2xl font-serif font-bold text-maroon tracking-tight">Himachal<span className="italic opacity-60">Heritage</span></h1>
         <div className="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-maroon/60">
           <button onClick={() => navigate('/map')} className="hover:text-maroon transition-colors">Explorer</button>
+          <button onClick={() => navigate('/booking')} className="hover:text-maroon transition-colors">Travel</button>
           <button onClick={() => navigate('/archives')} className="hover:text-maroon transition-colors">Archives</button>
           <button onClick={() => navigate('/dashboard')} className="hover:text-maroon transition-colors">Discover</button>
         </div>
-        <button 
-          onClick={() => navigate('/dashboard')}
-          className="bg-maroon text-white px-8 py-3 rounded-full text-xs font-bold hover:scale-105 transition-transform shadow-lg shadow-maroon/20"
-        >
-          Begin Journey
-        </button>
+        <div className="flex gap-4 items-center">
+          <button 
+            onClick={() => navigate('/login')}
+            className="hidden md:block text-xs font-bold text-maroon hover:text-maroon-dark transition-colors uppercase tracking-widest"
+          >
+            Log In
+          </button>
+          <button 
+            onClick={() => navigate('/signup')}
+            className="bg-white text-maroon border border-maroon/10 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-cream-dark transition-all"
+          >
+            Sign Up
+          </button>
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="bg-maroon text-white px-8 py-3 rounded-full text-xs font-bold hover:scale-105 transition-transform shadow-lg shadow-maroon/20"
+          >
+            Begin Journey
+          </button>
+        </div>
       </nav>
 
       {/* Hero Section */}
@@ -169,6 +184,157 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Preservation Impact - Visual Storytelling */}
+      <section className="bg-white py-32 px-8 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-24 items-center">
+             <div className="relative">
+                <div className="grid grid-cols-2 gap-6">
+                   <motion.div 
+                    initial={{ y: 40 }}
+                    whileInView={{ y: 0 }}
+                    className="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl"
+                   >
+                      <img src={templeInteriorImg} className="w-full h-full object-cover" alt="" />
+                   </motion.div>
+                   <motion.div 
+                    initial={{ y: -40 }}
+                    whileInView={{ y: 0 }}
+                    className="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl mt-12"
+                   >
+                      <img src={monasteryExteriorImg} className="w-full h-full object-cover" alt="" />
+                   </motion.div>
+                </div>
+                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-cream rounded-full border border-maroon/5 flex items-center justify-center p-8 text-center shadow-xl">
+                   <span className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest leading-tight">Digital Preservation Active</span>
+                </div>
+             </div>
+             
+             <div>
+                <span className="text-xs font-bold text-orange-600 uppercase tracking-[0.4em] mb-6 block">Our Mission</span>
+                <h2 className="text-5xl font-serif text-maroon mb-8 leading-tight">
+                  Protecting the Soul <br />
+                  <span className="italic opacity-40">of the Mountains.</span>
+                </h2>
+                <div className="space-y-8">
+                   <div className="flex gap-6">
+                      <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center flex-shrink-0 text-orange-600">
+                         <ShieldCheck className="w-6 h-6" />
+                      </div>
+                      <div>
+                         <h4 className="text-lg font-serif text-maroon mb-1">Cultural Integrity</h4>
+                         <p className="text-sm text-maroon/50 leading-relaxed">We work directly with monastery custodians to ensure every digital capture respects the sanctity of the space.</p>
+                      </div>
+                   </div>
+                   <div className="flex gap-6">
+                      <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center flex-shrink-0 text-orange-600">
+                         <Globe className="w-6 h-6" />
+                      </div>
+                      <div>
+                         <h4 className="text-lg font-serif text-maroon mb-1">Global Access</h4>
+                         <p className="text-sm text-maroon/50 leading-relaxed">Providing high-fidelity access to students and researchers worldwide who cannot physically reach these remote altitudes.</p>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The Marketplace Preview - Sacred Crafts */}
+      <section className="bg-cream py-32 px-8">
+        <div className="max-w-7xl mx-auto">
+           <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+              <div>
+                 <h2 className="text-5xl font-serif text-maroon mb-4">Sacred <span className="italic opacity-30">Artifacts</span></h2>
+                 <p className="text-maroon/40 text-sm max-w-md">Own a piece of the heritage. Every purchase supports local Himachali artisans and monastery restoration.</p>
+              </div>
+              <button className="bg-white text-maroon border border-maroon/10 px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-maroon hover:text-white transition-all flex items-center gap-3">
+                 View Full Shop <ChevronRight className="w-4 h-4" />
+              </button>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {[
+                { name: "Hand-painted Thangka", cat: "Ritual Art", price: "₹12,000", img: buddhistTextsImg },
+                { name: "Singing Bowl", cat: "Meditation", price: "₹3,500", img: ceremonialMaskImg },
+                { name: "Prayer Flags", cat: "Ritual", price: "₹450", img: monasteryExteriorImg },
+                { name: "Monastery Incense", cat: "Fragrance", price: "₹850", img: templeInteriorImg },
+              ].map((item, i) => (
+                <motion.div key={i} whileHover={{ y: -8 }} className="bg-white p-6 rounded-[2.5rem] shadow-xl shadow-maroon/5 border border-maroon/5 group cursor-pointer">
+                   <div className="aspect-square rounded-3xl overflow-hidden mb-6 bg-cream">
+                      <img src={item.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="" />
+                   </div>
+                   <span className="text-[9px] font-bold text-orange-600 uppercase tracking-widest mb-1 block">{item.cat}</span>
+                   <h4 className="text-lg font-serif text-maroon mb-2">{item.name}</h4>
+                   <div className="flex justify-between items-center mt-4">
+                      <span className="text-sm font-bold text-maroon/60">{item.price}</span>
+                      <button className="p-2 rounded-full bg-cream text-maroon group-hover:bg-maroon group-hover:text-white transition-colors">
+                         <ShoppingBag className="w-4 h-4" />
+                      </button>
+                   </div>
+                </motion.div>
+              ))}
+           </div>
+        </div>
+      </section>
+
+      {/* Testimonials - Voices of Devbhumi */}
+      <section className="bg-white py-32 px-8 border-y border-maroon/5">
+         <div className="max-w-4xl mx-auto text-center">
+            <Quote className="w-12 h-12 text-maroon/10 mx-auto mb-10" />
+            <div className="relative">
+               <h3 className="text-3xl font-serif text-maroon italic leading-relaxed mb-12">
+                 "Watching the sunrise over Key Monastery through the 360° portal felt like standing on the edge of the world. A truly spiritual experience that bridged the gap between my living room and the Himalayas."
+               </h3>
+               <div className="flex items-center justify-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-cream overflow-hidden border border-maroon/10">
+                     <img src="https://i.pravatar.cc/100?u=aadi" alt="" />
+                  </div>
+                  <div className="text-left">
+                     <p className="text-sm font-bold text-maroon uppercase tracking-widest">Sarah Jenkins</p>
+                     <p className="text-xs text-maroon/40 uppercase tracking-tighter">Cultural Researcher • London</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* Final Call to Action */}
+      <section className="py-32 px-8 relative overflow-hidden bg-cream">
+         <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-[50%] h-full bg-gradient-to-r from-maroon/20 to-transparent blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-[50%] h-full bg-gradient-to-l from-maroon/20 to-transparent blur-3xl" />
+         </div>
+
+         <div className="max-w-4xl mx-auto text-center relative z-10">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              className="bg-maroon rounded-[4rem] p-20 shadow-[0_40px_100px_-20px_rgba(107,76,76,0.5)] text-white"
+            >
+               <h2 className="text-5xl font-serif mb-8 leading-tight">Start Your Sacred <br /> <span className="italic opacity-50">Pilgrimage Today.</span></h2>
+               <p className="text-white/60 mb-12 max-w-lg mx-auto text-lg leading-relaxed">
+                  Join thousands of explorers preserving and experiencing the heritage of Himachal Pradesh. Uncover history, find peace, and support local communities.
+               </p>
+               <div className="flex flex-col sm:flex-row justify-center gap-6">
+                  <button 
+                    onClick={() => navigate('/dashboard')}
+                    className="bg-white text-maroon px-12 py-5 rounded-full font-bold shadow-2xl hover:scale-105 active:scale-95 transition-all text-sm uppercase tracking-widest"
+                  >
+                    Launch Explorer
+                  </button>
+                  <button 
+                    onClick={() => navigate('/booking')}
+                    className="bg-maroon-dark text-white border border-white/10 px-12 py-5 rounded-full font-bold hover:bg-white hover:text-maroon transition-all text-sm uppercase tracking-widest"
+                  >
+                    Plan Visit
+                  </button>
+               </div>
+            </motion.div>
+         </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-20 px-8 bg-white border-t border-maroon/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
@@ -180,6 +346,7 @@ const LandingPage = () => {
             <div className="flex flex-col gap-3">
               <span className="text-[10px] font-bold uppercase tracking-widest text-maroon">Explore</span>
               <button onClick={() => navigate('/map')} className="text-xs text-maroon/60 hover:text-maroon text-left">Map Navigation</button>
+              <button onClick={() => navigate('/booking')} className="text-xs text-maroon/60 hover:text-maroon text-left">Plan Journey</button>
               <button onClick={() => navigate('/ar')} className="text-xs text-maroon/60 hover:text-maroon text-left">360° Sanctum</button>
               <button onClick={() => navigate('/chanting')} className="text-xs text-maroon/60 hover:text-maroon text-left">Chanting Library</button>
             </div>
@@ -197,11 +364,11 @@ const LandingPage = () => {
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-maroon/5 px-4 py-2">
         <div className="max-w-md mx-auto flex items-center justify-between">
           {[
-            { name: 'Home', path: '/dashboard', icon: Home },
+            { name: 'Home', path: '/', icon: Home },
             { name: 'Map', path: '/map', icon: MapIcon },
             { name: 'Tours', path: '/ar', icon: Compass },
+            { name: 'Travel', path: '/booking', icon: Plane },
             { name: 'Community', path: '/calendar', icon: Users },
-            { name: 'More', path: '/archives', icon: MoreHorizontal },
           ].map((item) => (
             <NavLink
               key={item.path}
