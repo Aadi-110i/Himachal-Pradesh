@@ -15,6 +15,7 @@ import ArchiveDetail from './pages/ArchiveDetail';
 import ChantingLibrary from './pages/ChantingLibrary';
 import TravelBooking from './pages/TravelBooking';
 import Feedback from './pages/Feedback';
+import DiscoveryGlobe from './pages/DiscoveryGlobe';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/ar" element={<ARViewer />} />
         <Route path="/map" element={<MapNavigation />} />
+        <Route path="/globe" element={<DiscoveryGlobe />} />
         <Route path="/panorama/:id" element={<PanoramaView />} />
         <Route path="/booking" element={<TravelBooking />} />
         <Route path="/archives" element={<DigitalArchives />} />

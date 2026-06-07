@@ -16,15 +16,16 @@ const MainLayout = ({ children }) => {
     { name: 'Map', path: '/map', icon: MapIcon },
     { name: 'Tours', path: '/ar', icon: Compass },
     { name: 'Travel', path: '/booking', icon: Plane },
-    { name: 'Community', path: '/calendar', icon: Users },
+    { name: 'Discovery', path: '/globe', icon: Sparkles },
   ];
 
   const getPageTitle = () => {
     switch (location.pathname) {
-      case '/dashboard': return 'Discover';
+      case '/': return 'Heritage Home';
       case '/map': return 'Heritage Map';
       case '/ar': return '360° Tours';
       case '/booking': return 'Plan Journey';
+      case '/globe': return 'Divine Discovery';
       case '/archives': return 'Archives';
       case '/calendar': return 'Community';
       default: return 'Himachal Heritage';

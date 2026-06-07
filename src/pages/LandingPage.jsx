@@ -27,7 +27,7 @@ const LandingPage = () => {
           <button onClick={() => navigate('/map')} className="hover:text-maroon transition-colors">Explorer</button>
           <button onClick={() => navigate('/booking')} className="hover:text-maroon transition-colors">Travel</button>
           <button onClick={() => navigate('/archives')} className="hover:text-maroon transition-colors">Archives</button>
-          <button onClick={() => navigate('/dashboard')} className="hover:text-maroon transition-colors">Discover</button>
+          <button onClick={() => navigate('/globe')} className="hover:text-maroon transition-colors">Discover</button>
         </div>
         <div className="flex gap-4 items-center">
           <button 
