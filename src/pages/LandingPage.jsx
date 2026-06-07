@@ -1,15 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles, Home, Users, MoreHorizontal } from 'lucide-react';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
+
+// Assets
+import monasteryExteriorImg from '../assets/monastery_exterior.png';
+import templeInteriorImg from '../assets/temple_interior.png';
+import buddhistTextsImg from '../assets/buddhist_texts.png';
+import ceremonialMaskImg from '../assets/ceremonial_mask.png';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   const featuredDestinations = [
-    { title: "Key Monastery", loc: "Spiti Valley", img: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&q=80&w=800" },
-    { title: "Hadimba Devi", loc: "Manali", img: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&q=80&w=800" },
-    { title: "Masroor Temples", loc: "Kangra", img: "https://images.unsplash.com/photo-1615966650071-855b15f29ad1?auto=format&fit=crop&q=80&w=800" },
+    { title: "Key Monastery", loc: "Spiti Valley", img: monasteryExteriorImg },
+    { title: "Sacred Manuscripts", loc: "Rumtek Archives", img: buddhistTextsImg },
+    { title: "Cham Dance Masks", loc: "Ritual Arts", img: ceremonialMaskImg },
   ];
 
   return (
@@ -74,7 +80,7 @@ const LandingPage = () => {
           >
             <div className="relative aspect-[4/5] rounded-[4rem] overflow-hidden shadow-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&q=80&w=1200" 
+                src={monasteryExteriorImg} 
                 alt="Himachal Heritage" 
                 className="w-full h-full object-cover"
               />
@@ -112,6 +118,7 @@ const LandingPage = () => {
                 key={i}
                 whileHover={{ y: -10 }}
                 className="group cursor-pointer"
+                onClick={() => navigate('/dashboard')}
               >
                 <div className="relative aspect-square rounded-[3rem] overflow-hidden mb-6 shadow-lg">
                   <img src={dest.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={dest.title} />
@@ -139,6 +146,7 @@ const LandingPage = () => {
                 type="text" 
                 placeholder="Search for temples, deities, or history..."
                 className="w-full bg-cream rounded-full py-5 pl-14 pr-6 text-sm border-none focus:ring-2 focus:ring-maroon/10 placeholder:text-maroon/20 shadow-inner"
+                onKeyDown={(e) => { if (e.key === 'Enter') navigate('/archives'); }}
               />
             </div>
             <div className="flex justify-center gap-12 text-maroon/40">
@@ -171,17 +179,41 @@ const LandingPage = () => {
           <div className="flex gap-12">
             <div className="flex flex-col gap-3">
               <span className="text-[10px] font-bold uppercase tracking-widest text-maroon">Explore</span>
-              <a href="#" className="text-xs text-maroon/60 hover:text-maroon">Map Navigation</a>
-              <a href="#" className="text-xs text-maroon/60 hover:text-maroon">360° Sanctum</a>
+              <button onClick={() => navigate('/map')} className="text-xs text-maroon/60 hover:text-maroon text-left">Map Navigation</button>
+              <button onClick={() => navigate('/ar')} className="text-xs text-maroon/60 hover:text-maroon text-left">360° Sanctum</button>
+              <button onClick={() => navigate('/chanting')} className="text-xs text-maroon/60 hover:text-maroon text-left">Chanting Library</button>
             </div>
             <div className="flex flex-col gap-3">
               <span className="text-[10px] font-bold uppercase tracking-widest text-maroon">Connect</span>
-              <a href="#" className="text-xs text-maroon/60 hover:text-maroon">Community</a>
-              <a href="#" className="text-xs text-maroon/60 hover:text-maroon">Archives</a>
+              <button onClick={() => navigate('/calendar')} className="text-xs text-maroon/60 hover:text-maroon text-left">Community</button>
+              <button onClick={() => navigate('/archives')} className="text-xs text-maroon/60 hover:text-maroon text-left">Archives</button>
+              <button onClick={() => navigate('/dashboard')} className="text-xs text-maroon/60 hover:text-maroon text-left">Dashboard</button>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-maroon/5 px-4 py-2">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          {[
+            { name: 'Home', path: '/dashboard', icon: Home },
+            { name: 'Map', path: '/map', icon: MapIcon },
+            { name: 'Tours', path: '/ar', icon: Compass },
+            { name: 'Community', path: '/calendar', icon: Users },
+            { name: 'More', path: '/archives', icon: MoreHorizontal },
+          ].map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className="flex flex-col items-center gap-1 p-2 transition-all duration-300 text-gray-400 hover:text-maroon"
+            >
+              <item.icon className="w-5 h-5 stroke-[1.5px]" />
+              <span className="text-[10px] uppercase tracking-tighter">{item.name}</span>
+            </NavLink>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 };

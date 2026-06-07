@@ -9,7 +9,7 @@ const ARViewer = () => {
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [hasFoundTreasure, setHasFoundFoundTreasure] = useState(false);
 
-  const monastery360 = "/assets/1.jpeg";
+  const monastery360 = "/assets/moqshss4.png";
 
   const rumtekQuiz = {
     question: "What is the primary lineage associated with the Rumtek Monastery?",
