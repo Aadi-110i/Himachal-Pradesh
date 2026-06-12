@@ -26,15 +26,17 @@ const SplashScreen = ({ onComplete }) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 1, ease: "easeInOut" }}
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        onEnded={onComplete}
-        src={heroVideo}
-        className="absolute w-[100vh] h-[100vw] min-w-[100vh] min-h-[100vw] object-cover -rotate-90 origin-center"
-      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          onEnded={onComplete}
+          src={heroVideo}
+          className="absolute w-full h-full object-cover -rotate-90 scale-[1.8] md:scale-[1.5]"
+        />
+      </div>
       <div className="absolute inset-0 bg-black/40" />
       
       <div className="relative z-10 flex flex-col items-center">
