@@ -8,7 +8,7 @@ import rohtangImg from '../assets/hampta_pass_trek.png';
 import key360 from '../assets/monetry360.png';
 import hadimba360 from '../assets/temple.png';
 import stadium360 from '../assets/dharashalastadium.png';
-import rohtang360 from '../assets/moqshss4.png';
+import rohtang360 from '../assets/nature.png';
 
 export const locations = [
   {

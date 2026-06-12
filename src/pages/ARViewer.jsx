@@ -31,19 +31,6 @@ const ARViewer = () => {
         {/* Viewer Section */}
         <div className="flex-grow h-full relative group cursor-all-scroll bg-gray-200">
           <PanoramaViewer imageUrl={monastery360} />
-          
-          {/* AR Treasure Hunt Hotspot */}
-          {!hasFoundTreasure && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              onClick={() => { setIsQuizOpen(true); setHasFoundTreasure(true); }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-maroon/20 border-2 border-maroon rounded-full flex items-center justify-center hover:bg-maroon hover:scale-125 transition-all shadow-2xl"
-            >
-              <Sparkles className="text-white w-6 h-6 animate-pulse" />
-            </motion.button>
-          )}
 
           {/* Overlay UI */}
           <div className="absolute top-6 left-6 z-10">
