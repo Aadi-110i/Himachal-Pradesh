@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles, Home, Users, Plane, ShieldCheck, Quote, ShoppingBag, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { useGame } from '../context/GameContext';
 
 // Assets
 import monasteryExteriorImg from '../assets/monastery_exterior.png';
@@ -11,6 +12,7 @@ import ceremonialMaskImg from '../assets/ceremonial_mask.png';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user, logout } = useGame();
 
   const featuredDestinations = [
     { title: "Key Monastery", loc: "Spiti Valley", img: monasteryExteriorImg },
@@ -30,24 +32,46 @@ const LandingPage = () => {
           <button onClick={() => navigate('/globe')} className="hover:text-maroon transition-colors">Discover</button>
         </div>
         <div className="flex gap-4 items-center">
-          <button 
-            onClick={() => navigate('/login')}
-            className="hidden md:block text-xs font-bold text-maroon hover:text-maroon-dark transition-colors uppercase tracking-widest"
-          >
-            Log In
-          </button>
-          <button 
-            onClick={() => navigate('/signup')}
-            className="bg-white text-maroon border border-maroon/10 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-cream-dark transition-all"
-          >
-            Sign Up
-          </button>
-          <button 
-            onClick={() => navigate('/dashboard')}
-            className="bg-maroon text-white px-8 py-3 rounded-full text-xs font-bold hover:scale-105 transition-transform shadow-lg shadow-maroon/20"
-          >
-            Begin Journey
-          </button>
+          {user ? (
+            <>
+              <span className="hidden md:block text-xs font-bold text-maroon uppercase tracking-widest mr-2">
+                Welcome, {user.name.split(' ')[0]}
+              </span>
+              <button 
+                onClick={logout}
+                className="hidden md:block text-xs font-bold text-maroon/60 hover:text-maroon transition-colors uppercase tracking-widest"
+              >
+                Log Out
+              </button>
+              <button 
+                onClick={() => navigate('/dashboard')}
+                className="bg-maroon text-white px-8 py-3 rounded-full text-xs font-bold hover:scale-105 transition-transform shadow-lg shadow-maroon/20"
+              >
+                Dashboard
+              </button>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={() => navigate('/login')}
+                className="hidden md:block text-xs font-bold text-maroon hover:text-maroon-dark transition-colors uppercase tracking-widest"
+              >
+                Log In
+              </button>
+              <button 
+                onClick={() => navigate('/signup')}
+                className="bg-white text-maroon border border-maroon/10 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-cream-dark transition-all"
+              >
+                Sign Up
+              </button>
+              <button 
+                onClick={() => navigate('/dashboard')}
+                className="bg-maroon text-white px-8 py-3 rounded-full text-xs font-bold hover:scale-105 transition-transform shadow-lg shadow-maroon/20"
+              >
+                Begin Journey
+              </button>
+            </>
+          )}
         </div>
       </nav>
 

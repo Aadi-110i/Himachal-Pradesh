@@ -2,7 +2,7 @@
 import rumtekImg from '../assets/1.jpeg'; 
 import keyImg from '../assets/monastery_exterior.png';
 import hadimbaImg from '../assets/temple_interior.png';
-import rohtangImg from '../assets/3.jpeg';
+import rohtangImg from '../assets/hampta_pass_trek.png';
 
 // 360 Panoramas
 import key360 from '../assets/monetry360.png';

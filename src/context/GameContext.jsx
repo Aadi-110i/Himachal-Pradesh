@@ -14,7 +14,10 @@ export const GameProvider = ({ children }) => {
   const [language, setLanguage] = useState('English'); // English, Hindi, Tibetan
   const [unlockedLore, setUnlockedLore] = useState([]);
   const [isPremium, setIsPremium] = useState(false);
-  const [user, setUser] = useState(null); // { name: '...', email: '...' }
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('ht_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const addPoints = (amount) => setPoints(prev => prev + amount);
   
@@ -29,8 +32,16 @@ export const GameProvider = ({ children }) => {
 
   const toggleLanguage = (lang) => setLanguage(lang);
   const unlockPremium = () => setIsPremium(true);
-  const login = (userData) => setUser(userData);
-  const logout = () => setUser(null);
+  
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem('ht_user', JSON.stringify(userData));
+  };
+  
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('ht_user');
+  };
 
   const value = {
     points,
