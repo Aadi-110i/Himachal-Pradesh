@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Compass, ArrowRight, Map as MapIcon, Box, Search, Heart, Globe, Sparkles, Home, Users, Plane, ShieldCheck, Quote, ShoppingBag, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
+import PurchaseRequestModal from '../components/ui/PurchaseRequestModal';
 
 // Assets
 import monasteryExteriorImg from '../assets/monastery_exterior.png';
@@ -13,6 +14,7 @@ import ceremonialMaskImg from '../assets/ceremonial_mask.png';
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useGame();
+  const [selectedArtifact, setSelectedArtifact] = useState(null);
 
   const featuredDestinations = [
     { title: "Key Monastery", loc: "Spiti Valley", img: monasteryExteriorImg },
@@ -285,7 +287,12 @@ const LandingPage = () => {
                 { name: "Prayer Flags", cat: "Ritual", price: "₹450", img: monasteryExteriorImg },
                 { name: "Monastery Incense", cat: "Fragrance", price: "₹850", img: templeInteriorImg },
               ].map((item, i) => (
-                <motion.div key={i} whileHover={{ y: -8 }} className="bg-white p-6 rounded-[2.5rem] shadow-xl shadow-maroon/5 border border-maroon/5 group cursor-pointer">
+                <motion.div 
+                  key={i} 
+                  whileHover={{ y: -8 }} 
+                  onClick={() => setSelectedArtifact(item)}
+                  className="bg-white p-6 rounded-[2.5rem] shadow-xl shadow-maroon/5 border border-maroon/5 group cursor-pointer"
+                >
                    <div className="aspect-square rounded-3xl overflow-hidden mb-6 bg-cream">
                       <img src={item.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="" />
                    </div>
@@ -406,6 +413,12 @@ const LandingPage = () => {
           ))}
         </div>
       </nav>
+
+      <PurchaseRequestModal 
+        isOpen={!!selectedArtifact} 
+        onClose={() => setSelectedArtifact(null)} 
+        item={selectedArtifact} 
+      />
     </div>
   );
 };
