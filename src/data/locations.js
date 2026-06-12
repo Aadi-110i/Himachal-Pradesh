@@ -3,12 +3,14 @@ import rumtekImg from '../assets/1.jpeg';
 import keyImg from '../assets/monastery_exterior.png';
 import hadimbaImg from '../assets/temple_interior.png';
 import rohtangImg from '../assets/hampta_pass_trek.png';
+import parasharImg from '../assets/temp1.jpg'; // Using temp1.jpg as a placeholder for the lake thumbnail
 
 // 360 Panoramas
 import key360 from '../assets/monetry360.png';
 import hadimba360 from '../assets/temple.png';
 import stadium360 from '../assets/dharashalastadium.png';
-import rohtang360 from '../assets/nature.png';
+import rohtang360 from '../assets/moqshss4.png';
+import parashar360 from '../assets/nature.png';
 
 export const locations = [
   {
@@ -86,6 +88,26 @@ export const locations = [
     description: "A high mountain pass on the eastern Pir Panjal Range of the Himalayas connecting Kullu with Lahaul.",
     elevation: "3,978m",
     bestVisit: "May - November"
+  },
+  {
+    id: "parashar",
+    name: "Parashar Lake",
+    loc: "Mandi",
+    category: "Nature",
+    x: 45,
+    y: 68,
+    lat: 31.756,
+    lng: 77.102,
+    img: parasharImg,
+    panorama: parashar360,
+    description: "A crystal clear water body situated at an altitude of 2730m with a floating island in it.",
+    history: "The lake is considered sacred to the sage Parashar who is believed to have meditated there. Next to the lake is a three-storied pagoda-like temple dedicated to the sage.",
+    traditions: [
+      "Parashar Rishi Fair in June",
+      "Sacred Pilgrimage"
+    ],
+    elevation: "2,730m",
+    bestVisit: "December - February (for snow) or April - July"
   }
 ];
 
