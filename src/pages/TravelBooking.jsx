@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import { Plane, Car, Home, Compass, MapPin, Star, Clock, ChevronRight, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
+import BookingRequestModal from '../components/ui/BookingRequestModal';
 import spitiHomestayImg from '../assets/spiti_valley_homestay.png';
 import hamptaPassImg from '../assets/hampta_pass_trek.png';
 
 const TravelBooking = () => {
   const [activeTab, setActiveTab] = useState('stays');
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const navigate = useNavigate();
   const { user } = useGame();
 
@@ -17,7 +19,7 @@ const TravelBooking = () => {
       navigate('/login', { state: { from: '/booking', item } });
       return;
     }
-    alert(`Booking requested for ${item.name}! Our team will contact you at ${user.email}.`);
+    setSelectedBooking(item);
   };
 
   const categories = [
@@ -132,6 +134,12 @@ const TravelBooking = () => {
           </div>
         </div>
       </div>
+      
+      <BookingRequestModal 
+        isOpen={!!selectedBooking} 
+        onClose={() => setSelectedBooking(null)} 
+        item={selectedBooking} 
+      />
     </MainLayout>
   );
 };
