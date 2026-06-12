@@ -97,7 +97,7 @@ const AudioGuide = () => {
             onClick={() => setIsOpen(true)}
             className="w-14 h-14 bg-maroon text-white rounded-full flex items-center justify-center shadow-xl shadow-maroon/20 hover:bg-maroon-dark transition-all group"
           >
-            <Activity className={`w-5 h-5 ${isPlaying ? 'animate-pulse' : 'group-hover:animate-bounce'}`} />
+            <Volume2 className={`w-5 h-5 ${isPlaying ? 'animate-pulse' : 'group-hover:animate-bounce'}`} />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
               <div className="w-1 h-1 bg-white rounded-full animate-ping" />
             </div>
