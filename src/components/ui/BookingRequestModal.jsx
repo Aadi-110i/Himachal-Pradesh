@@ -7,7 +7,8 @@ const BookingRequestModal = ({ isOpen, onClose, item }) => {
   const { user } = useGame();
   const [step, setStep] = useState('form'); // 'form' | 'success'
   const [formData, setFormData] = useState({
-    dates: '',
+    checkIn: '',
+    checkOut: '',
     guests: '1',
     paymentMethod: 'pay_at_property',
     phone: '',
@@ -106,18 +107,34 @@ const BookingRequestModal = ({ isOpen, onClose, item }) => {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Dates</label>
+                        <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Check-in</label>
                         <div className="relative group">
                           <input 
                             type="date" 
                             required
-                            value={formData.dates}
-                            onChange={(e) => setFormData(p => ({...p, dates: e.target.value}))}
+                            value={formData.checkIn}
+                            onChange={(e) => setFormData(p => ({...p, checkIn: e.target.value}))}
                             className="w-full bg-cream rounded-2xl py-3 px-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none text-maroon cursor-pointer font-sans"
                             style={{ minHeight: '48px' }}
                           />
                         </div>
                       </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Check-out</label>
+                        <div className="relative group">
+                          <input 
+                            type="date" 
+                            required
+                            value={formData.checkOut}
+                            onChange={(e) => setFormData(p => ({...p, checkOut: e.target.value}))}
+                            className="w-full bg-cream rounded-2xl py-3 px-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none text-maroon cursor-pointer font-sans"
+                            style={{ minHeight: '48px' }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Guests</label>
                         <div className="relative group">
@@ -129,27 +146,28 @@ const BookingRequestModal = ({ isOpen, onClose, item }) => {
                           >
                             {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} {n===1?'Guest':'Guests'}</option>)}
                           </select>
-                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-maroon/40">
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-maroon/40 bg-cream pl-2">
                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                           </div>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Contact Phone</label>
-                      <div className="relative group">
-                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30 group-focus-within:text-maroon transition-colors" />
-                        <input 
-                          type="tel" 
-                          required
-                          placeholder="Your phone number"
-                          value={formData.phone}
-                          onChange={(e) => setFormData(p => ({...p, phone: e.target.value}))}
-                          className="w-full bg-cream rounded-2xl py-3 pl-11 pr-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
-                        />
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Contact Phone</label>
+                        <div className="relative group">
+                          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30 group-focus-within:text-maroon transition-colors" />
+                          <input 
+                            type="tel" 
+                            required
+                            placeholder="+91..."
+                            value={formData.phone}
+                            onChange={(e) => setFormData(p => ({...p, phone: e.target.value}))}
+                            className="w-full bg-cream rounded-2xl py-3 pl-11 pr-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none text-maroon font-sans"
+                            style={{ minHeight: '48px' }}
+                          />
+                        </div>
                       </div>
                     </div>
+
 
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Payment Preference</label>
