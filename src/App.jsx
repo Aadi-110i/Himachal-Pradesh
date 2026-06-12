@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -16,10 +17,25 @@ import ChantingLibrary from './pages/ChantingLibrary';
 import TravelBooking from './pages/TravelBooking';
 import Feedback from './pages/Feedback';
 import DiscoveryGlobe from './pages/DiscoveryGlobe';
+import SplashScreen from './components/ui/SplashScreen';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(() => {
+    // Only show splash on initial load, checking session storage
+    const hasSeenSplash = sessionStorage.getItem('ht_splash_seen');
+    return !hasSeenSplash;
+  });
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+    sessionStorage.setItem('ht_splash_seen', 'true');
+  };
+
   return (
     <Router>
+      <AnimatePresence>
+        {showSplash && <SplashScreen onComplete={handleSplashComplete} key="splash" />}
+      </AnimatePresence>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
