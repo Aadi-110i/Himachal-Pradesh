@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle2, AlertCircle, Trophy, HelpCircle } from 'lucide-react';
+import { X, CheckCircle2, AlertCircle, Trophy, HelpCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 
 const QuizModal = ({ quiz, isOpen, onClose }) => {
@@ -24,6 +24,8 @@ const QuizModal = ({ quiz, isOpen, onClose }) => {
     onClose();
   };
 
+  const isCorrect = selected === quiz.correct;
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -33,71 +35,109 @@ const QuizModal = ({ quiz, isOpen, onClose }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={resetAndClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-maroon/20 backdrop-blur-md"
           />
 
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative bg-[#1a1a1c] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 overflow-hidden shadow-2xl"
+            className="relative bg-white w-full max-w-lg rounded-[3rem] p-10 overflow-hidden shadow-2xl border border-maroon/5"
           >
-            <div className="flex justify-between items-center mb-8">
+            {/* Ornament */}
+            <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+              <Sparkles className="w-32 h-32 text-maroon" />
+            </div>
+
+            <div className="flex justify-between items-center mb-8 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center">
-                  <HelpCircle className="text-orange-500 w-6 h-6" />
+                <div className="w-10 h-10 bg-maroon/5 rounded-xl flex items-center justify-center border border-maroon/10">
+                  <HelpCircle className="text-maroon w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Heritage Quiz</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-maroon/40">Heritage Quiz</span>
               </div>
-              <button onClick={resetAndClose} className="text-white/20 hover:text-white transition-colors">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            <h3 className="text-2xl font-bold mb-8 leading-tight">{quiz.question}</h3>
-
-            <div className="space-y-3 mb-10">
-              {quiz.options.map((opt, i) => (
-                <button
-                  key={i}
-                  disabled={isSubmitted}
-                  onClick={() => setSelected(i)}
-                  className={`w-full p-5 rounded-2xl border text-left font-bold transition-all flex items-center justify-between group ${
-                    selected === i 
-                      ? 'bg-orange-500 border-orange-500 text-white' 
-                      : 'bg-white/5 border-white/5 text-white/60 hover:bg-white/10 hover:border-white/10'
-                  } ${isSubmitted && i === quiz.correct && 'bg-emerald-500 border-emerald-500 text-white'} ${
-                    isSubmitted && selected === i && i !== quiz.correct && 'bg-red-500 border-red-500 text-white'
-                  }`}
-                >
-                  {opt}
-                  {isSubmitted && i === quiz.correct && <CheckCircle2 className="w-5 h-5" />}
-                  {isSubmitted && selected === i && i !== quiz.correct && <AlertCircle className="w-5 h-5" />}
-                </button>
-              ))}
-            </div>
-
-            {!isSubmitted ? (
-              <button
-                disabled={selected === null}
-                onClick={handleSubmit}
-                className="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              <button 
+                onClick={resetAndClose} 
+                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-maroon/5 text-maroon/20 hover:text-maroon transition-all"
               >
-                Confirm Answer
+                <X className="w-5 h-5" />
               </button>
-            ) : (
-              <div className="flex flex-col items-center gap-4 text-center">
-                <div className="flex items-center gap-3 text-orange-500 font-black uppercase tracking-widest text-sm">
-                  <Trophy className="w-5 h-5" /> {selected === quiz.correct ? '+100 XP' : 'Keep Learning'}
-                </div>
-                <button
-                  onClick={resetAndClose}
-                  className="w-full bg-white/10 border border-white/10 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-all"
-                >
-                  Continue Exploration
-                </button>
+            </div>
+
+            <div className="relative z-10">
+              <h3 className="text-3xl font-serif text-maroon mb-8 leading-tight">{quiz.question}</h3>
+
+              <div className="space-y-3 mb-10">
+                {quiz.options.map((opt, i) => {
+                  let buttonStyle = "bg-cream border-transparent text-maroon/60 hover:bg-maroon/5";
+                  
+                  if (selected === i) {
+                    buttonStyle = "bg-maroon border-maroon text-white shadow-lg shadow-maroon/20";
+                  }
+
+                  if (isSubmitted) {
+                    if (i === quiz.correct) {
+                      buttonStyle = "bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20";
+                    } else if (selected === i && i !== quiz.correct) {
+                      buttonStyle = "bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-500/20";
+                    } else {
+                      buttonStyle = "bg-cream border-transparent text-maroon/20 opacity-50";
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={i}
+                      disabled={isSubmitted}
+                      onClick={() => setSelected(i)}
+                      className={`w-full p-5 rounded-2xl border-2 text-left font-bold transition-all flex items-center justify-between group ${buttonStyle}`}
+                    >
+                      <span className="text-sm tracking-tight">{opt}</span>
+                      {isSubmitted && i === quiz.correct && <CheckCircle2 className="w-5 h-5" />}
+                      {isSubmitted && selected === i && i !== quiz.correct && <AlertCircle className="w-5 h-5" />}
+                    </button>
+                  );
+                })}
               </div>
-            )}
+
+              {!isSubmitted ? (
+                <button
+                  disabled={selected === null}
+                  onClick={handleSubmit}
+                  className="w-full bg-maroon text-white py-5 rounded-full font-bold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xl shadow-maroon/20 flex items-center justify-center gap-3 group"
+                >
+                  Confirm Answer
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col items-center gap-6"
+                >
+                  <div className={`flex items-center gap-3 font-bold uppercase tracking-widest text-xs ${isCorrect ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    {isCorrect ? (
+                      <>
+                        <Trophy className="w-5 h-5" />
+                        <span>Sacred Knowledge Attained • +100 XP</span>
+                      </>
+                    ) : (
+                      <>
+                        <HelpCircle className="w-5 h-5" />
+                        <span>The Path to Wisdom Continues</span>
+                      </>
+                    )}
+                  </div>
+                  
+                  <button
+                    onClick={resetAndClose}
+                    className="w-full bg-cream text-maroon py-5 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-maroon/5 transition-all border border-maroon/10"
+                  >
+                    Continue Exploration
+                  </button>
+                </motion.div>
+              )}
+            </div>
           </motion.div>
         </div>
       )}

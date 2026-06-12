@@ -8,6 +8,7 @@ import QuizModal from '../components/ui/QuizModal';
 
 // Assets
 import monasteryExteriorImg from '../assets/monastery_exterior.png';
+import monastery360Img from '../assets/monetry360.png';
 
 const ARViewer = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ARViewer = () => {
   const [hasFoundTreasure, setHasFoundTreasure] = useState(false);
   const [activeView, setActiveView] = useState('interior'); // 'interior' | 'courtyard'
 
-  const monastery360 = "/assets/moqshss4.png";
+  const monastery360 = monastery360Img;
 
   const rumtekQuiz = {
     question: "What is the primary lineage associated with the Rumtek Monastery?",
@@ -28,7 +29,7 @@ const ARViewer = () => {
     <MainLayout>
       <div className="h-[calc(100vh-64px-56px)] w-full flex flex-col md:flex-row bg-cream overflow-hidden">
         {/* Viewer Section */}
-        <div className="flex-grow h-full relative group cursor-crosshair bg-gray-200">
+        <div className="flex-grow h-full relative group cursor-all-scroll bg-gray-200">
           <PanoramaViewer imageUrl={monastery360} />
           
           {/* AR Treasure Hunt Hotspot */}

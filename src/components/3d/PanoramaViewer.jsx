@@ -15,7 +15,7 @@ function Panorama({ url }) {
 
 const PanoramaViewer = ({ imageUrl }) => {
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative cursor-all-scroll">
       <Canvas camera={{ position: [0, 0, 0.1] }}>
         <React.Suspense fallback={null}>
           <Panorama url={imageUrl} />

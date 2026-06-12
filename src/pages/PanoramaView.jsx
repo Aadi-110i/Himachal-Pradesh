@@ -6,46 +6,13 @@ import { motion } from 'framer-motion';
 import { useGame } from '../context/GameContext';
 import DonationModal from '../components/ui/DonationModal';
 import PremiumUpgradeModal from '../components/ui/PremiumUpgradeModal';
-
-// Assets
-import rumtekImg from '../assets/1.jpeg';
-
-const locations = {
-  rumtek: {
-    name: "Rumtek Monastery",
-    loc: "Sikkim",
-    category: "Monastery",
-    panorama: rumtekImg,
-    description: "One of the most significant and largest monasteries in Sikkim, belonging to the Kagyu sect of Buddhism."
-  },
-  key: {
-    name: "Key Monastery",
-    loc: "Spiti Valley",
-    category: "Monastery",
-    panorama: "https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=2000",
-    description: "A Tibetan Buddhist monastery located on top of a hill at an altitude of 4,166 metres above sea level."
-  },
-  hadimba: {
-    name: "Hadimba Devi Temple",
-    loc: "Manali",
-    category: "Temple",
-    panorama: "https://images.unsplash.com/photo-1623492701902-47dc207df5dc?auto=format&fit=crop&q=80&w=2000",
-    description: "An ancient cave temple dedicated to Hidimbi Devi, wife of Bhima, a figure in the Indian epic Mahabharata."
-  },
-  rohtang: {
-    name: "Rohtang Pass",
-    loc: "Manali",
-    category: "Nature",
-    panorama: "https://images.unsplash.com/photo-1623492701902-47dc207df5dc?auto=format&fit=crop&q=80&w=2000",
-    description: "A high mountain pass on the eastern Pir Panjal Range of the Himalayas around 51 km from Manali."
-  }
-};
+import { locations } from '../data/locations';
 
 const PanoramaView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isPremium } = useGame();
-  const location = locations[id];
+  const location = locations.find(l => l.id === id);
 
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);

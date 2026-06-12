@@ -3,46 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout';
 import { motion } from 'framer-motion';
 import { MapPin, Navigation, Radio, Compass, Mountain, Tent, Landmark } from 'lucide-react';
+import { locations } from '../data/locations';
 
 // Assets
 import mapImageHimachal from '../assets/map2.png'; 
-import thumb1 from '../assets/2.jpeg';
-import thumb2 from '../assets/3.jpeg';
 
 const MapNavigation = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("All");
   
-  const locations = [
-    { 
-      id: "key",
-      name: "Key Monastery", 
-      x: 35,
-      y: 30,
-      loc: "Spiti Valley", 
-      category: "Monastery", 
-      img: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&q=80&w=400"
-    },
-    { 
-      id: "hadimba",
-      name: "Hadimba Devi Temple", 
-      x: 42,
-      y: 55,
-      loc: "Manali", 
-      category: "Temple", 
-      img: thumb1
-    },
-    { 
-      id: "rohtang",
-      name: "Rohtang Pass", 
-      x: 48,
-      y: 42,
-      loc: "Manali", 
-      category: "Nature", 
-      img: thumb2
-    }
-  ];
-
   const categories = ["All", "Temple", "Monastery", "Nature"];
 
   const filteredLocations = activeCategory === "All" 

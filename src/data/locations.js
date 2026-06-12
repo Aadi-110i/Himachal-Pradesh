@@ -1,8 +1,14 @@
 // Centralized Himachal Heritage Data
-import rumtekImg from '../assets/1.jpeg'; // Note: Rumtek is Sikkim but kept for backward compatibility if needed, though we focus on Himachal
+import rumtekImg from '../assets/1.jpeg'; 
 import keyImg from '../assets/monastery_exterior.png';
 import hadimbaImg from '../assets/temple_interior.png';
 import rohtangImg from '../assets/3.jpeg';
+
+// 360 Panoramas
+import key360 from '../assets/monetry360.png';
+import hadimba360 from '../assets/temple.png';
+import stadium360 from '../assets/dharashalastadium.png';
+import rohtang360 from '../assets/moqshss4.png';
 
 export const locations = [
   {
@@ -15,14 +21,13 @@ export const locations = [
     lat: 32.298,
     lng: 78.012,
     img: keyImg,
-    panorama: "https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=2000",
+    panorama: key360,
     description: "Key Gompa is a Tibetan Buddhist monastery located on top of a hill at an altitude of 4,166 metres above sea level in the Spiti Valley.",
-    history: "Founded in the 11th century, it is the largest monastery in Spiti Valley and serves as a religious training centre for Lamas. It has survived numerous attacks from Mongols and other empires over centuries.",
+    history: "Founded in the 11th century, it is the largest monastery in Spiti Valley and serves as a religious training centre for Lamas.",
     traditions: [
       "Annual Cham Dance (Masked Dance)",
       "Daily Morning Chants & Meditation",
-      "Traditional Thangka Painting workshops",
-      "Guhyasamaja Tantra rituals"
+      "Traditional Thangka Painting"
     ],
     elevation: "4,166m",
     bestVisit: "June - September"
@@ -37,17 +42,35 @@ export const locations = [
     lat: 32.246,
     lng: 77.181,
     img: hadimbaImg,
-    panorama: "https://images.unsplash.com/photo-1623492701902-47dc207df5dc?auto=format&fit=crop&q=80&w=2000",
+    panorama: hadimba360,
     description: "An ancient cave temple dedicated to Hidimbi Devi, built in 1553 by Maharaja Bahadur Singh.",
-    history: "The temple is built around a cave where Hidimbi Devi performed meditation. It is known for its exquisite four-tiered pagoda-style roof and intricately carved wooden doors.",
+    history: "The temple is built around a cave where Hidimbi Devi performed meditation. It is known for its exquisite four-tiered pagoda-style roof.",
     traditions: [
       "Annual Saroohni Fair in May",
-      "Traditional Himachali architecture rituals",
-      "Local deity processions (Kullu Dussehra link)",
       "Sacred cedar forest preservation"
     ],
     elevation: "2,050m",
-    bestVisit: "May - June & September - October"
+    bestVisit: "May - June"
+  },
+  {
+    id: "stadium",
+    name: "HPCA Stadium",
+    loc: "Dharamshala",
+    category: "Nature",
+    x: 22,
+    y: 62,
+    lat: 32.197,
+    lng: 76.325,
+    img: stadium360,
+    panorama: stadium360,
+    description: "The Himachal Pradesh Cricket Association Stadium is one of the most beautiful cricket grounds in the world, set against the Dhauladhar range.",
+    history: "Established in 2003, it is the first stadium in India to use rye grass, which prevents the grass from dying in cold temperatures.",
+    traditions: [
+      "International Cricket Matches",
+      "Himalayan Sports Culture"
+    ],
+    elevation: "1,457m",
+    bestVisit: "March - June & September - November"
   },
   {
     id: "rohtang",
@@ -59,39 +82,10 @@ export const locations = [
     lat: 32.371,
     lng: 77.246,
     img: rohtangImg,
-    panorama: "https://images.unsplash.com/photo-1623492701902-47dc207df5dc?auto=format&fit=crop&q=80&w=2000",
-    description: "A high mountain pass on the eastern Pir Panjal Range of the Himalayas around 51 km from Manali.",
-    history: "Rohtang means 'pile of corpses', named so because of the high number of people who died trying to cross it in ancient times. It connects the Kullu Valley with the Lahaul and Spiti Valleys.",
-    traditions: [
-      "Sacred Beas Kund source rituals",
-      "Himalayan border security culture",
-      "High-altitude pastoralism heritage",
-      "Summer mountain festivals"
-    ],
+    panorama: rohtang360,
+    description: "A high mountain pass on the eastern Pir Panjal Range of the Himalayas connecting Kullu with Lahaul.",
     elevation: "3,978m",
     bestVisit: "May - November"
-  },
-  {
-    id: "tabo",
-    name: "Tabo Monastery",
-    loc: "Lahaul & Spiti",
-    category: "Monastery",
-    x: 65,
-    y: 35,
-    lat: 32.091,
-    lng: 78.381,
-    img: "https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=400",
-    panorama: "https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=2000",
-    description: "Known as the 'Ajanta of the Himalayas', founded in 996 AD by the Tibetan Buddhist loṭsawa Rinchen Zangpo.",
-    history: "It is the oldest continuously operating Buddhist enclave in India. The monastery is famous for its thousand-year-old murals and stucco sculptures that cover almost every wall.",
-    traditions: [
-      "Ancient Murals Preservation Rituals",
-      "Kalachakra Tantra practice",
-      "Monastic clay sculpture arts",
-      "Spiritual library archive maintenance"
-    ],
-    elevation: "3,050m",
-    bestVisit: "May - October"
   }
 ];
 
