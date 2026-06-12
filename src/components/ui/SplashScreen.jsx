@@ -34,7 +34,7 @@ const SplashScreen = ({ onComplete }) => {
           playsInline
           onEnded={onComplete}
           src={heroVideo}
-          className="absolute w-full h-full object-cover"
+          className="absolute w-[100vh] h-[100vw] object-cover -rotate-90"
         />
       </div>
       <div className="absolute inset-0 bg-black/40" />
