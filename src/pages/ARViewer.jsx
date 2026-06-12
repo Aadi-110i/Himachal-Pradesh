@@ -9,6 +9,7 @@ import QuizModal from '../components/ui/QuizModal';
 // Assets
 import monasteryExteriorImg from '../assets/monastery_exterior.png';
 import monastery360Img from '../assets/monetry360.png';
+import courtyardImg from '../assets/courtyard.png';
 
 const ARViewer = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const ARViewer = () => {
   const [hasFoundTreasure, setHasFoundTreasure] = useState(false);
   const [activeView, setActiveView] = useState('interior'); // 'interior' | 'courtyard'
 
-  const monastery360 = monastery360Img;
+  const monastery360 = activeView === 'interior' ? monastery360Img : courtyardImg;
 
   const rumtekQuiz = {
     question: "What is the primary lineage associated with the Rumtek Monastery?",
@@ -102,7 +103,10 @@ const ARViewer = () => {
             <section>
               <h4 className="text-[10px] font-bold text-maroon/30 uppercase tracking-widest mb-4">Space Context</h4>
               <p className="text-maroon/70 leading-relaxed text-sm">
-                This assembly hall is the heart of the Dharma Chakra Centre. The murals represent the transmission of the Kagyu lineage from India to Tibet, meticulously restored using traditional mineral pigments.
+                {activeView === 'interior' 
+                  ? "This assembly hall is the heart of the Dharma Chakra Centre. The murals represent the transmission of the Kagyu lineage from India to Tibet, meticulously restored using traditional mineral pigments."
+                  : "The monastery courtyard serves as a gathering space for religious festivals and daily monastic life. Surrounded by traditional Tibetan architecture, it offers a panoramic view of the Himalayan foothills."
+                }
               </p>
             </section>
 
