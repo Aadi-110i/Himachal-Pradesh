@@ -108,26 +108,31 @@ const BookingRequestModal = ({ isOpen, onClose, item }) => {
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Dates</label>
                         <div className="relative group">
-                          <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30 group-focus-within:text-maroon transition-colors" />
                           <input 
-                            type="text" 
+                            type="date" 
                             required
-                            placeholder="e.g., Oct 12 - 15"
                             value={formData.dates}
                             onChange={(e) => setFormData(p => ({...p, dates: e.target.value}))}
-                            className="w-full bg-cream rounded-2xl py-3 pl-11 pr-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                            className="w-full bg-cream rounded-2xl py-3 px-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none text-maroon cursor-pointer font-sans"
+                            style={{ minHeight: '48px' }}
                           />
                         </div>
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-bold text-maroon/60 uppercase tracking-widest ml-1">Guests</label>
-                        <select 
-                          value={formData.guests}
-                          onChange={(e) => setFormData(p => ({...p, guests: e.target.value}))}
-                          className="w-full bg-cream rounded-2xl py-3 px-4 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none appearance-none cursor-pointer"
-                        >
-                          {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} {n===1?'Guest':'Guests'}</option>)}
-                        </select>
+                        <div className="relative group">
+                          <select 
+                            value={formData.guests}
+                            onChange={(e) => setFormData(p => ({...p, guests: e.target.value}))}
+                            className="w-full bg-cream rounded-2xl py-3 pl-4 pr-10 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none appearance-none cursor-pointer text-maroon font-sans"
+                            style={{ minHeight: '48px' }}
+                          >
+                            {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} {n===1?'Guest':'Guests'}</option>)}
+                          </select>
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-maroon/40">
+                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
