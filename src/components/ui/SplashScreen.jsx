@@ -10,6 +10,14 @@ const SplashScreen = ({ onComplete }) => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 1.5; // Increase video speed by 50%
     }
+    
+    // Prevent scrolling while splash screen is active
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      // Restore scrolling when splash screen is removed
+      document.body.style.overflow = 'unset';
+    };
   }, []);
 
   return (
