@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Home, Map as MapIcon, Box, LogIn, Menu, X, Landmark, Globe, Archive, Calendar, MoreHorizontal, Users, Compass, Plane, Sparkles } from 'lucide-react';
+import { Home, Map as MapIcon, Box, LogIn, Menu, X, Landmark, Globe, Archive, Calendar, MoreHorizontal, Users, Compass, Plane, Sparkles, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../../context/GameContext';
 import AudioGuide from '../ui/AudioGuide';
@@ -37,23 +37,34 @@ const MainLayout = ({ children }) => {
       {/* Top Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-cream/80 backdrop-blur-md border-b border-maroon/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button 
-            onClick={() => navigate(-1)}
-            className="p-2 hover:bg-maroon/5 rounded-full transition-colors text-maroon"
-          >
-            <X className="w-5 h-5 rotate-45" /> {/* Simple back-like arrow representation as seen in screenshot */}
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => navigate(-1)}
+              className="p-2 hover:bg-maroon/5 rounded-full transition-colors text-maroon"
+              title="Go Back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <NavLink to="/" className="hidden md:block text-lg font-serif font-bold text-maroon tracking-tight">
+              Himachal<span className="italic opacity-60">Treasures</span>
+            </NavLink>
+          </div>
 
-          <h1 className="text-xl font-serif font-bold text-maroon tracking-tight">
+          <h1 className="text-sm font-bold text-maroon/60 uppercase tracking-widest text-center flex-1">
             {getPageTitle()}
           </h1>
 
-          <button 
-            className="p-2 hover:bg-maroon/5 rounded-full transition-colors text-maroon"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <NavLink to="/" className="md:hidden text-sm font-serif font-bold text-maroon tracking-tight">
+              HT
+            </NavLink>
+            <button 
+              className="p-2 hover:bg-maroon/5 rounded-full transition-colors text-maroon"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </nav>
 
