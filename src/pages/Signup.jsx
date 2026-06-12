@@ -1,10 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, Github, Chrome, ChevronLeft, Sparkles, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Github, Chrome, ChevronLeft, ShieldCheck } from 'lucide-react';
+import { useGame } from '../context/GameContext';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { login } = useGame();
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    login({ name: 'Guardian', email: 'monk@devbhumi.com' });
+    navigate('/dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-[#fdfaf6] flex items-center justify-center p-6 relative overflow-hidden">
@@ -50,14 +58,14 @@ const Signup = () => {
         </div>
 
         {/* Right Side: Form */}
-        <div className="flex-grow p-12 md:p-20 bg-white">
+        <div className="flex-grow p-12 md:p-20 bg-white overflow-y-auto">
            <div className="max-w-sm mx-auto">
-              <div className="mb-10 text-center md:text-left">
-                 <h3 className="text-2xl font-serif text-maroon mb-2">Create your account</h3>
+              <div className="mb-8 text-center md:text-left">
+                 <h3 className="text-2xl font-serif text-maroon mb-1">Create your account</h3>
                  <p className="text-sm text-gray-400">Already a guardian? <button onClick={() => navigate('/login')} className="text-maroon font-bold hover:underline">Log in instead</button></p>
               </div>
 
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-4" onSubmit={handleSignup}>
                  <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
                     <div className="relative group">
@@ -66,6 +74,7 @@ const Signup = () => {
                         type="text" 
                         placeholder="Tenzin Gyatso"
                         className="w-full bg-cream rounded-2xl py-3.5 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                        required
                        />
                     </div>
                  </div>
@@ -78,6 +87,7 @@ const Signup = () => {
                         type="email" 
                         placeholder="monk@devbhumi.com"
                         className="w-full bg-cream rounded-2xl py-3.5 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                        required
                        />
                     </div>
                  </div>
@@ -90,19 +100,20 @@ const Signup = () => {
                         type="password" 
                         placeholder="••••••••"
                         className="w-full bg-cream rounded-2xl py-3.5 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                        required
                        />
                     </div>
                  </div>
 
-                 <div className="flex items-start gap-3 px-1 pt-1 pb-4">
-                    <input type="checkbox" className="mt-1 rounded border-gray-200 text-maroon focus:ring-maroon/20 cursor-pointer" />
+                 <div className="flex items-start gap-3 px-1 pt-1">
+                    <input type="checkbox" className="mt-1 rounded border-gray-200 text-maroon focus:ring-maroon/20 cursor-pointer" required />
                     <p className="text-[9px] text-gray-400 leading-relaxed uppercase tracking-tight">
                        I agree to the <span className="text-maroon font-bold">Terms</span> and <span className="text-maroon font-bold">Privacy Policy</span>.
                     </p>
                  </div>
 
                  <button 
-                  onClick={() => navigate('/')}
+                  type="submit"
                   className="w-full bg-maroon text-white py-4.5 rounded-full font-bold text-sm shadow-xl shadow-maroon/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group"
                  >
                    Become a Guardian
@@ -110,18 +121,18 @@ const Signup = () => {
                  </button>
               </form>
 
-              <div className="my-8 flex items-center gap-4">
+              <div className="my-6 flex items-center gap-4">
                  <div className="flex-grow h-px bg-gray-100" />
                  <span className="text-[9px] font-bold text-gray-300 uppercase tracking-[0.2em]">Quick Signup</span>
                  <div className="flex-grow h-px bg-gray-100" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                 <button className="flex items-center justify-center gap-3 py-3.5 border-2 border-gray-50 rounded-2xl hover:bg-gray-50 hover:border-gray-100 transition-all group">
+                 <button type="button" className="flex items-center justify-center gap-3 py-3.5 border-2 border-gray-50 rounded-2xl hover:bg-gray-50 hover:border-gray-100 transition-all group">
                     <Chrome className="w-4 h-4 text-gray-400 group-hover:text-maroon transition-colors" />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-maroon">Google</span>
                  </button>
-                 <button className="flex items-center justify-center gap-3 py-3.5 border-2 border-gray-50 rounded-2xl hover:bg-gray-50 hover:border-gray-100 transition-all group">
+                 <button type="button" className="flex items-center justify-center gap-3 py-3.5 border-2 border-gray-50 rounded-2xl hover:bg-gray-50 hover:border-gray-100 transition-all group">
                     <Github className="w-4 h-4 text-gray-400 group-hover:text-maroon transition-colors" />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-maroon">Github</span>
                  </button>

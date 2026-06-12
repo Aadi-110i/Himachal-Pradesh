@@ -183,92 +183,92 @@ const CulturalCalendar = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto"
+              className="relative bg-white w-full max-w-lg rounded-[3rem] overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar"
             >
               {/* Modal Header */}
-              <div className="relative h-40 overflow-hidden">
+              <div className="relative h-48 overflow-hidden">
                 <img src={bookingEvent.img} className="w-full h-full object-cover" alt={bookingEvent.name} />
-                <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 to-transparent" />
-                <div className="absolute bottom-4 left-6 right-6">
-                  <span className="text-[9px] font-bold text-white/60 uppercase tracking-widest">{bookingEvent.type}</span>
-                  <h2 className="text-2xl font-serif text-white">{bookingEvent.name}</h2>
+                <div className="absolute inset-0 bg-gradient-to-t from-maroon/90 via-maroon/20 to-transparent" />
+                <div className="absolute bottom-6 left-8 right-8">
+                  <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest block mb-1">{bookingEvent.type}</span>
+                  <h2 className="text-3xl font-serif text-white">{bookingEvent.name}</h2>
                 </div>
                 <button 
                   onClick={() => setBookingEvent(null)}
-                  className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-all"
+                  className="absolute top-6 right-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-all z-10"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="p-8">
+              <div className="p-8 md:p-10">
                 {bookingStep === 'form' ? (
                   <>
                     {/* Event Info */}
-                    <div className="bg-cream-dark rounded-2xl p-4 mb-8 space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-maroon/70">
-                        <Calendar className="w-3.5 h-3.5 text-maroon" /> {bookingEvent.date}
+                    <div className="bg-cream rounded-[2rem] p-6 mb-10 space-y-3 border border-maroon/5">
+                      <div className="flex items-center gap-3 text-[11px] font-bold text-maroon/60 uppercase tracking-widest">
+                        <Calendar className="w-4 h-4 text-maroon" /> {bookingEvent.date}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-maroon/70">
-                        <MapPin className="w-3.5 h-3.5 text-maroon" /> {bookingEvent.loc}
+                      <div className="flex items-center gap-3 text-[11px] font-bold text-maroon/60 uppercase tracking-widest">
+                        <MapPin className="w-4 h-4 text-maroon" /> {bookingEvent.loc}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-maroon/70">
-                        <Ticket className="w-3.5 h-3.5 text-maroon" /> {bookingEvent.fee}
+                      <div className="flex items-center gap-3 text-[11px] font-bold text-maroon/60 uppercase tracking-widest">
+                        <Ticket className="w-4 h-4 text-maroon" /> {bookingEvent.fee}
                       </div>
                     </div>
 
                     {/* Booking Form */}
-                    <form onSubmit={handleSubmitBooking} className="space-y-5">
-                      <div>
-                        <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Full Name *</label>
-                        <div className="relative">
-                          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30" />
+                    <form onSubmit={handleSubmitBooking} className="space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name *</label>
+                        <div className="relative group">
+                          <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
                           <input 
                             type="text" 
                             required
                             value={formData.name}
                             onChange={(e) => setFormData(p => ({...p, name: e.target.value}))}
-                            placeholder="Enter your full name"
-                            className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20"
+                            placeholder="Tenzin Gyatso"
+                            className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
                           />
                         </div>
                       </div>
 
-                      <div>
-                        <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Email Address *</label>
-                        <div className="relative">
-                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30" />
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address *</label>
+                        <div className="relative group">
+                          <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
                           <input 
                             type="email" 
                             required
                             value={formData.email}
                             onChange={(e) => setFormData(p => ({...p, email: e.target.value}))}
-                            placeholder="your@email.com"
-                            className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20"
+                            placeholder="monk@devbhumi.com"
+                            className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Phone</label>
-                          <div className="relative">
-                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-maroon/30" />
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+                          <div className="relative group">
+                            <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
                             <input 
                               type="tel"
                               value={formData.phone}
                               onChange={(e) => setFormData(p => ({...p, phone: e.target.value}))}
                               placeholder="+91..."
-                              className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20"
+                              className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
                             />
                           </div>
                         </div>
-                        <div>
-                          <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Guests *</label>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Guests *</label>
                           <select 
                             value={formData.guests}
                             onChange={(e) => setFormData(p => ({...p, guests: e.target.value}))}
-                            className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 px-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 appearance-none"
+                            className="w-full bg-cream rounded-2xl py-4 px-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none appearance-none cursor-pointer"
                           >
                             {[1,2,3,4,5,6,7,8,9,10].map(n => (
                               <option key={n} value={n}>{n} {n === 1 ? 'person' : 'people'}</option>
@@ -277,22 +277,23 @@ const CulturalCalendar = () => {
                         </div>
                       </div>
 
-                      <div>
-                        <label className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest mb-2 block">Special Requests</label>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Special Requests</label>
                         <textarea 
                           value={formData.notes}
                           onChange={(e) => setFormData(p => ({...p, notes: e.target.value}))}
                           placeholder="Dietary requirements, accessibility needs..."
                           rows={3}
-                          className="w-full bg-cream-dark border border-maroon/5 rounded-2xl py-3.5 px-4 text-sm text-maroon focus:outline-none focus:border-maroon/20 placeholder:text-maroon/20 resize-none"
+                          className="w-full bg-cream rounded-3xl py-4 px-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none resize-none"
                         />
                       </div>
 
                       <button 
                         type="submit"
-                        className="w-full bg-maroon text-white py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-maroon-dark transition-all shadow-lg shadow-maroon/20 flex items-center justify-center gap-3"
+                        className="w-full bg-maroon text-white py-5 rounded-full font-bold text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-maroon/20 flex items-center justify-center gap-3 group"
                       >
-                        <Ticket className="w-5 h-5" /> Confirm Booking
+                        Confirm Booking
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </form>
                   </>

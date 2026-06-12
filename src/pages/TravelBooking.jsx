@@ -2,11 +2,23 @@ import React, { useState } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import { motion } from 'framer-motion';
 import { Plane, Car, Home, Compass, MapPin, Star, Clock, ChevronRight, Filter } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useGame } from '../context/GameContext';
 import spitiHomestayImg from '../assets/spiti_valley_homestay.png';
 import hamptaPassImg from '../assets/hampta_pass_trek.png';
 
 const TravelBooking = () => {
   const [activeTab, setActiveTab] = useState('stays');
+  const navigate = useNavigate();
+  const { user } = useGame();
+
+  const handleBookingRequest = (item) => {
+    if (!user) {
+      navigate('/login', { state: { from: '/booking', item } });
+      return;
+    }
+    alert(`Booking requested for ${item.name}! Our team will contact you at ${user.email}.`);
+  };
 
   const categories = [
     { id: 'stays', name: 'Homestays', icon: Home },
@@ -93,7 +105,10 @@ const TravelBooking = () => {
                     </div>
                   </div>
                   
-                  <button className="w-full bg-cream border border-maroon/10 text-maroon py-4 rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] group-hover:bg-maroon group-hover:text-white transition-all flex items-center justify-center gap-2">
+                  <button 
+                    onClick={() => handleBookingRequest(item)}
+                    className="w-full bg-cream border border-maroon/10 text-maroon py-4 rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] group-hover:bg-maroon group-hover:text-white transition-all flex items-center justify-center gap-2"
+                  >
                     Request Booking
                     <ChevronRight className="w-4 h-4" />
                   </button>

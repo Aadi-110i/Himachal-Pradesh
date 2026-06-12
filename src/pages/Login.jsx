@@ -2,9 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Github, Chrome, ChevronLeft, Sparkles } from 'lucide-react';
+import { useGame } from '../context/GameContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useGame();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    login({ name: 'Explorer', email: 'monk@devbhumi.com' });
+    navigate('/dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-[#fdfaf6] flex items-center justify-center p-6 relative overflow-hidden">
@@ -57,7 +65,7 @@ const Login = () => {
                  <p className="text-sm text-gray-400">New here? <button onClick={() => navigate('/signup')} className="text-maroon font-bold hover:underline">Create an account</button></p>
               </div>
 
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-6" onSubmit={handleLogin}>
                  <div className="space-y-2">
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
                     <div className="relative group">
@@ -66,6 +74,7 @@ const Login = () => {
                         type="email" 
                         placeholder="monk@devbhumi.com"
                         className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                        required
                        />
                     </div>
                  </div>
@@ -73,7 +82,7 @@ const Login = () => {
                  <div className="space-y-2">
                     <div className="flex justify-between items-center px-1">
                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Password</label>
-                       <button className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest hover:text-maroon transition-colors">Forgot?</button>
+                       <button type="button" className="text-[10px] font-bold text-maroon/40 uppercase tracking-widest hover:text-maroon transition-colors">Forgot?</button>
                     </div>
                     <div className="relative group">
                        <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-maroon transition-colors" />
@@ -81,12 +90,13 @@ const Login = () => {
                         type="password" 
                         placeholder="••••••••"
                         className="w-full bg-cream rounded-2xl py-4 pl-12 pr-6 text-sm border-2 border-transparent focus:bg-white focus:border-maroon/10 focus:ring-0 transition-all outline-none"
+                        required
                        />
                     </div>
                  </div>
 
                  <button 
-                  onClick={() => navigate('/')}
+                  type="submit"
                   className="w-full bg-maroon text-white py-5 rounded-full font-bold text-sm shadow-xl shadow-maroon/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group"
                  >
                    Enter the Sanctum

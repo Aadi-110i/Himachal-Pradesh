@@ -14,6 +14,7 @@ export const GameProvider = ({ children }) => {
   const [language, setLanguage] = useState('English'); // English, Hindi, Tibetan
   const [unlockedLore, setUnlockedLore] = useState([]);
   const [isPremium, setIsPremium] = useState(false);
+  const [user, setUser] = useState(null); // { name: '...', email: '...' }
 
   const addPoints = (amount) => setPoints(prev => prev + amount);
   
@@ -28,6 +29,8 @@ export const GameProvider = ({ children }) => {
 
   const toggleLanguage = (lang) => setLanguage(lang);
   const unlockPremium = () => setIsPremium(true);
+  const login = (userData) => setUser(userData);
+  const logout = () => setUser(null);
 
   const value = {
     points,
@@ -35,11 +38,14 @@ export const GameProvider = ({ children }) => {
     language,
     unlockedLore,
     isPremium,
+    user,
     addPoints,
     awardBadge,
     toggleLanguage,
     setUnlockedLore,
-    unlockPremium
+    unlockPremium,
+    login,
+    logout
   };
 
   return (
